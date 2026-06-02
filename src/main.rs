@@ -32,10 +32,61 @@ async fn main() -> Result<()> {
         Commands::Export { format, output } => export::export(format, output),
         Commands::Search { query } => search(&query),
         Commands::Alias => print_aliases(),
+        Commands::ShellHook { shell } => print_shell_hook(&shell),
+        Commands::Record {
+            command,
+            exit_code,
+            duration,
+            stdout,
+            stderr,
+        } => command::record_headless(command, exit_code, duration, stdout, stderr),
         Commands::Mcp { subcommand } => match subcommand {
             McpSubcommand::Serve => mcp::run_server().await,
         },
     }
+}
+
+fn print_shell_hook(shell: &str) -> Result<()> {
+    match shell {
+        "zsh" => {
+            println!(r#"# RunbookAI Zsh Integration
+_runbookai_preexec() {{
+    export _RB_START_TIME=$(date +%s%3N)
+    export _RB_LAST_CMD="$1"
+}}
+_runbookai_precmd() {{
+    local exit_code=$?
+    if [ -n "$_RB_LAST_CMD" ]; then
+        local end_time=$(date +%s%3N)
+        local duration=$((end_time - _RB_START_TIME))
+        # Headless record in background
+        runbookai record --command "$_RB_LAST_CMD" --exit-code $exit_code --duration $duration > /dev/null 2>&1 &!
+        unset _RB_LAST_CMD
+    fi
+}}
+autoload -Uz add-zsh-hook
+add-zsh-hook preexec _runbookai_preexec
+add-zsh-hook precmd _runbookai_precmd
+"#);
+        }
+        "bash" => {
+            println!(r#"# RunbookAI Bash Integration
+_runbookai_bash_hook() {{
+    local exit_code=$?
+    if [ -n "$_RB_LAST_CMD" ]; then
+        local end_time=$(date +%s%3N)
+        local duration=$((end_time - _RB_START_TIME))
+        runbookai record --command "$_RB_LAST_CMD" --exit-code $exit_code --duration $duration > /dev/null 2>&1 &
+        unset _RB_LAST_CMD
+    fi
+}}
+trap 'export _RB_START_TIME=$(date +%s%3N); export _RB_LAST_CMD="$BASH_COMMAND"' DEBUG
+PROMPT_COMMAND="_runbookai_bash_hook; $PROMPT_COMMAND"
+"#);
+        }
+        _ => return Err(anyhow::anyhow!("Unsupported shell: {}. Use 'zsh' or 'bash'.", shell)),
+    }
+    Ok(())
 }
 
 fn print_aliases() -> Result<()> {

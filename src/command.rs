@@ -90,6 +90,48 @@ pub fn note(kind: crate::models::NoteKind, content_parts: Vec<String>) -> Result
     Ok(())
 }
 
+pub fn record_headless(
+    command_str: String,
+    exit_code: i32,
+    duration_ms: u128,
+    stdout: Option<String>,
+    stderr: Option<String>,
+) -> Result<()> {
+    let id = active_session_id().ok();
+    if id.is_none() {
+        return Ok(()); // Silently skip if no active session
+    }
+    let id = id.unwrap();
+    let mut session = load_session(&id)?;
+    let config = load_config()?;
+    let cwd = std::env::current_dir()?;
+
+    let stdout_clean = stdout.map(|s| maybe_redact(&s, config.redact_secrets)).transpose()?.unwrap_or_default();
+    let stderr_clean = stderr.map(|s| maybe_redact(&s, config.redact_secrets)).transpose()?.unwrap_or_default();
+    
+    let stdout_preview = preview(&stdout_clean, config.max_output_length);
+    let stderr_preview = preview(&stderr_clean, config.max_output_length);
+    
+    let mut detected_errors = detect_errors(&stdout_preview, "stdout")?;
+    detected_errors.extend(detect_errors(&stderr_preview, "stderr")?);
+
+    let record = CommandRecord {
+        id: Uuid::new_v4().to_string(),
+        timestamp: Utc::now(),
+        cwd: cwd.display().to_string(),
+        command: command_str,
+        exit_code,
+        duration_ms,
+        stdout_preview: if stdout_preview.is_empty() { None } else { Some(stdout_preview) },
+        stderr_preview: if stderr_preview.is_empty() { None } else { Some(stderr_preview) },
+        detected_errors,
+    };
+
+    session.commands.push(record);
+    save_session(&session)?;
+    Ok(())
+}
+
 fn shell_command(command: &str) -> Command {
     #[cfg(target_os = "windows")]
     {

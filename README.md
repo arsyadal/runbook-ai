@@ -41,8 +41,27 @@ Implemented:
 - `runbookai stop`
 - `runbookai search "<query>"`
 - `runbookai alias`
+- `runbookai shell-hook`
 - `runbookai mcp serve`
 - `runbookai generate runbook`
+...
+## Shell Integration (No More `exec`)
+
+If you don't want to type `runbookai exec` for every command, you can integrate RunbookAI directly into your shell. This will automatically record every command you run whenever a session is active.
+
+Add this to your `.zshrc` or `.bashrc`:
+
+```bash
+# For Zsh
+source <(runbookai shell-hook zsh)
+
+# For Bash
+source <(runbookai shell-hook bash)
+```
+
+Now, simply running `runbookai start "title"` is enough. Every subsequent command in that shell will be recorded automatically until you run `runbookai stop`.
+
+*Note: Shell integration captures command strings, exit codes, and duration. For full output and error capture, `runbookai exec` is still recommended.*
 - `runbookai generate changelog`
 - `runbookai generate postmortem`
 - `runbookai generate all`

@@ -61,6 +61,30 @@ pub enum Commands {
     },
     /// Print shell alias definitions.
     Alias,
+    /// Generate shell hook script for automatic recording.
+    ShellHook {
+        /// Shell type (zsh, bash).
+        #[arg(default_value = "zsh")]
+        shell: String,
+    },
+    /// Record a command manually (headless).
+    Record {
+        /// The command that was executed.
+        #[arg(long)]
+        command: String,
+        /// Exit code of the command.
+        #[arg(long)]
+        exit_code: i32,
+        /// Duration of the command in milliseconds.
+        #[arg(long)]
+        duration: u128,
+        /// Captured stdout (optional).
+        #[arg(long)]
+        stdout: Option<String>,
+        /// Captured stderr (optional).
+        #[arg(long)]
+        stderr: Option<String>,
+    },
     /// Run as an MCP (Model Context Protocol) server.
     Mcp {
         #[command(subcommand)]
