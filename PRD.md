@@ -37,14 +37,18 @@ This creates several problems:
 4. Changelogs and postmortems must be written manually.
 5. Team handoff is weak because session logs are too noisy.
 6. AI agents solve problems but do not create durable operational memory.
+7. **Token Exhaustion & Session Fragmentation:** When an agent hits its token limit or "message cap" mid-task, developers lose context. Restarting the task or switching to a different AI provider is slow and error-prone because the new agent lacks the full history of failed attempts and findings.
 
-RunbookAI solves this by converting messy AI-assisted work into durable repo documentation.
+RunbookAI solves this by converting messy AI-assisted work into durable repo documentation that serves as a high-fidelity "save point" for any AI agent.
 
 ## 3. Differentiation
 
 RunbookAI is **not** a replacement for AI agent session resume, chat history, or memory tools.
 
-### 3.1 Compared to `/resume` and session history
+### 3.1 Seamless Provider Switching
+RunbookAI acts as a "Universal Context Bridge." If you hit a limit in Claude Code and need to move to Cursor or Gemini, you can generate a `Next-Agent Brief` to instantly give the new provider the distilled essence of your current progress without wasting tokens on raw chat history.
+
+### 3.2 Compared to `/resume` and session history
 
 Tools like Claude Code, OpenCode, pi, and other coding CLIs may support session resume.
 
@@ -59,7 +63,7 @@ Those features are useful for continuing a session, but they are usually:
 
 RunbookAI instead creates structured engineering artifacts that live in the repository.
 
-### 3.2 Compared to memory tools such as `claude-mem`
+### 3.3 Compared to memory tools such as `claude-mem`
 
 Memory tools help agents remember facts across sessions.
 
@@ -90,7 +94,7 @@ RunbookAI aims to:
 6. Generate readable Markdown runbooks.
 7. Generate simple changelog entries.
 8. Generate simple postmortem drafts.
-9. Generate a next-agent brief so future sessions can start faster.
+9. **Generate a high-fidelity Next-Agent Brief** to solve token limits and provider-switching friction.
 10. Work locally without requiring an API key.
 
 ## 5. Target Users
