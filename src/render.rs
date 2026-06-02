@@ -5,19 +5,19 @@ use serde_json::json;
 use slug::slugify;
 use std::fs;
 
-pub fn render_runbook(session: &Session) -> String {
-    render_template(session, "runbook")
+pub fn render_runbook(session: &Session, ai_summary: Option<&str>) -> String {
+    render_template(session, "runbook", ai_summary)
 }
 
 pub fn render_changelog(session: &Session) -> String {
-    render_template(session, "changelog")
+    render_template(session, "changelog", None)
 }
 
 pub fn render_postmortem(session: &Session) -> String {
-    render_template(session, "postmortem")
+    render_template(session, "postmortem", None)
 }
 
-fn render_template(session: &Session, template_name: &str) -> String {
+fn render_template(session: &Session, template_name: &str, ai_summary: Option<&str>) -> String {
     let mut hb = Handlebars::new();
     
     // Register default templates
@@ -44,6 +44,7 @@ fn render_template(session: &Session, template_name: &str) -> String {
         "startedAt": local_time(session.started_at),
         "endedAt": session.ended_at.map(local_time).unwrap_or_else(|| "active".to_string()),
         "problem": non_empty(&session.title, "No problem description recorded."),
+        "aiSummary": ai_summary.unwrap_or(""),
         "rootCause": markdown_list_or_placeholder(notes_by_kind(session, NoteKind::RootCause), "No root cause note recorded yet."),
         "commands": render_commands_table(session),
         "errors": render_errors(session),
@@ -74,6 +75,10 @@ fn default_runbook_template() -> &'static str {
     - Ended At: {{endedAt}}\n\n\
     ## Problem\n\n\
     {{problem}}\n\n\
+    {{#if aiSummary}}\n\
+    ## AI Summary\n\n\
+    {{aiSummary}}\n\n\
+    {{/if}}\n\
     ## Root Cause\n\n\
     {{rootCause}}\n\n\
     ## Commands Run\n\n\
@@ -361,21 +366,21 @@ mod tests {
     #[test]
     fn render_runbook_contains_title() {
         let session = sample_session();
-        let output = render_runbook(&session);
+        let output = render_runbook(&session, None);
         assert!(output.contains("# Runbook: Fix login error"));
     }
 
     #[test]
     fn render_runbook_contains_root_cause() {
         let session = sample_session();
-        let output = render_runbook(&session);
+        let output = render_runbook(&session, None);
         assert!(output.contains("JWT secret was missing"));
     }
 
     #[test]
     fn render_runbook_contains_commands_table() {
         let session = sample_session();
-        let output = render_runbook(&session);
+        let output = render_runbook(&session, None);
         assert!(output.contains("npm test"));
         assert!(output.contains("npm run build"));
     }

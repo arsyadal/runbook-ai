@@ -1,6 +1,7 @@
 use anyhow::Result;
 use clap::Parser;
 
+mod ai;
 mod cli;
 mod command;
 mod config;
@@ -15,7 +16,8 @@ mod util;
 
 use cli::{Cli, Commands, GenerateTarget};
 
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
@@ -25,7 +27,7 @@ fn main() -> Result<()> {
         Commands::Exec { command } => command::exec_command(&command),
         Commands::Note { kind, content } => command::note(kind, content),
         Commands::Stop => session::stop(),
-        Commands::Generate { target } => generate(target),
+        Commands::Generate { target, ai } => generate(target, ai).await,
         Commands::Export { format, output } => export::export(format, output),
         Commands::Search { query } => search(&query),
         Commands::Alias => print_aliases(),
@@ -57,17 +59,28 @@ fn search(query: &str) -> Result<()> {
     Ok(())
 }
 
-fn generate(target: GenerateTarget) -> Result<()> {
+async fn generate(target: GenerateTarget, ai: bool) -> Result<()> {
     let s = session::latest_or_active_session()?;
     let cfg = config::load_config()?;
     let out_dir = util::project_root()?.join(cfg.output_dir);
     std::fs::create_dir_all(&out_dir)?;
     let slug = render::session_slug(&s);
 
+    let mut ai_summary = None;
+    if ai {
+        println!("Generating AI summary... (using model: {})", ai::AIService::from_env().model);
+        let ai_service = ai::AIService::from_env();
+        let session_json = serde_json::to_string_pretty(&s)?;
+        match ai_service.summarize(&session_json).await {
+            Ok(summary) => ai_summary = Some(summary),
+            Err(e) => eprintln!("AI Summary failed: {}. Continuing with default template.", e),
+        }
+    }
+
     match target {
         GenerateTarget::Runbook => {
             let path = out_dir.join(format!("{slug}.md"));
-            std::fs::write(&path, render::render_runbook(&s))?;
+            std::fs::write(&path, render::render_runbook(&s, ai_summary.as_deref()))?;
             println!("Generated {}", path.display());
         }
         GenerateTarget::Changelog => {
@@ -84,7 +97,7 @@ fn generate(target: GenerateTarget) -> Result<()> {
             let runbook = out_dir.join(format!("{slug}.md"));
             let changelog = out_dir.join(format!("{slug}.changelog.md"));
             let postmortem = out_dir.join(format!("{slug}.postmortem.md"));
-            std::fs::write(&runbook, render::render_runbook(&s))?;
+            std::fs::write(&runbook, render::render_runbook(&s, ai_summary.as_deref()))?;
             std::fs::write(&changelog, render::render_changelog(&s))?;
             std::fs::write(&postmortem, render::render_postmortem(&s))?;
             println!("Generated {}", runbook.display());

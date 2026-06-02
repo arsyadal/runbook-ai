@@ -10,7 +10,7 @@ pub fn export(format: ExportFormat, output: Option<PathBuf>) -> Result<()> {
     let session = latest_or_active_session()?;
     let content = match format {
         ExportFormat::Json => serde_json::to_string_pretty(&session)?,
-        ExportFormat::Markdown => render_runbook(&session),
+        ExportFormat::Markdown => render_runbook(&session, None),
     };
 
     if let Some(path) = output {

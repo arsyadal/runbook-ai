@@ -41,6 +41,9 @@ pub enum Commands {
     Generate {
         #[command(subcommand)]
         target: GenerateTarget,
+        /// Use AI to generate a session summary (requires Ollama, OpenAI, or Gemini).
+        #[arg(long)]
+        ai: bool,
     },
     /// Export session data.
     Export {
