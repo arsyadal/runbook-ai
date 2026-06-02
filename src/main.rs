@@ -148,16 +148,24 @@ async fn generate(target: GenerateTarget, ai: bool) -> Result<()> {
             std::fs::write(&path, render::render_postmortem(&s))?;
             println!("Generated {}", path.display());
         }
+        GenerateTarget::Pr => {
+            let path = out_dir.join(format!("{slug}.pr.md"));
+            std::fs::write(&path, render::render_pr(&s, ai_summary.as_deref()))?;
+            println!("Generated {}", path.display());
+        }
         GenerateTarget::All => {
             let runbook = out_dir.join(format!("{slug}.md"));
             let changelog = out_dir.join(format!("{slug}.changelog.md"));
             let postmortem = out_dir.join(format!("{slug}.postmortem.md"));
+            let pr = out_dir.join(format!("{slug}.pr.md"));
             std::fs::write(&runbook, render::render_runbook(&s, ai_summary.as_deref()))?;
             std::fs::write(&changelog, render::render_changelog(&s))?;
             std::fs::write(&postmortem, render::render_postmortem(&s))?;
+            std::fs::write(&pr, render::render_pr(&s, ai_summary.as_deref()))?;
             println!("Generated {}", runbook.display());
             println!("Generated {}", changelog.display());
             println!("Generated {}", postmortem.display());
+            println!("Generated {}", pr.display());
         }
     }
     Ok(())

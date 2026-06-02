@@ -103,6 +103,7 @@ pub enum GenerateTarget {
     Runbook,
     Changelog,
     Postmortem,
+    Pr,
     All,
 }
 

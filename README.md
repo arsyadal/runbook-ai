@@ -64,6 +64,7 @@ Now, simply running `runbookai start "title"` is enough. Every subsequent comman
 *Note: Shell integration captures command strings, exit codes, and duration. For full output and error capture, `runbookai exec` is still recommended.*
 - `runbookai generate changelog`
 - `runbookai generate postmortem`
+- `runbookai generate pr`
 - `runbookai generate all`
 - `runbookai export --format json`
 - Custom Handlebars templates (`.runbookai/templates/`)

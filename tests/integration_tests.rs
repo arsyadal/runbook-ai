@@ -303,8 +303,8 @@ fn generate_all_creates_three_files() {
 
     assert_eq!(
         md_files.len(),
-        3,
-        "Expected 3 markdown files (runbook, changelog, postmortem)"
+        4,
+        "Expected 4 markdown files (runbook, changelog, postmortem, pr)"
     );
 }
 
