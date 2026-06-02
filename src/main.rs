@@ -27,7 +27,34 @@ fn main() -> Result<()> {
         Commands::Stop => session::stop(),
         Commands::Generate { target } => generate(target),
         Commands::Export { format, output } => export::export(format, output),
+        Commands::Search { query } => search(&query),
+        Commands::Alias => print_aliases(),
     }
+}
+
+fn print_aliases() -> Result<()> {
+    println!("# Add this to your .bashrc or .zshrc:");
+    println!("alias rb='runbookai'");
+    println!("alias rbx='runbookai exec'");
+    println!("alias rbn='runbookai note'");
+    println!("alias rbs='runbookai status'");
+    Ok(())
+}
+
+fn search(query: &str) -> Result<()> {
+    let results = session::search_sessions(query)?;
+    if results.is_empty() {
+        println!("No sessions found matching: {}", query);
+    } else {
+        println!("Found {} matching sessions:\n", results.len());
+        for session in results {
+            println!("- {} (ID: {})", session.title, session.id);
+            println!("  Started: {}", util::local_time(session.started_at));
+            println!("  Commands: {}, Notes: {}", session.commands.len(), session.notes.len());
+            println!();
+        }
+    }
+    Ok(())
 }
 
 fn generate(target: GenerateTarget) -> Result<()> {

@@ -45,7 +45,12 @@ pub fn start(title_parts: Vec<String>) -> Result<()> {
         Utc::now().format("%Y_%m_%d_%H%M%S"),
         &Uuid::new_v4().to_string()[..8]
     );
-    let snapshot = git_snapshot().ok();
+    let mut snapshot = git_snapshot().ok();
+    if let Some(ref mut s) = snapshot {
+        if let Some(ref d) = s.diff_content {
+            s.diff_content = Some(crate::redact::maybe_redact(d, config.redact_secrets)?);
+        }
+    }
 
     let session = Session {
         id: id.clone(),
@@ -108,7 +113,16 @@ pub fn stop() -> Result<()> {
     let mut session = load_session(&id)?;
     session.ended_at = Some(Utc::now());
     session.status = SessionStatus::Completed;
-    session.git_after = git_snapshot().ok();
+    
+    let config = crate::config::load_config()?;
+    let mut snapshot_after = git_snapshot().ok();
+    if let Some(ref mut s) = snapshot_after {
+        if let Some(ref d) = s.diff_content {
+            s.diff_content = Some(crate::redact::maybe_redact(d, config.redact_secrets)?);
+        }
+    }
+    session.git_after = snapshot_after;
+
     save_session(&session)?;
     let root = project_root()?;
     let _ = fs::remove_file(root.join(ACTIVE_SESSION_FILE));
@@ -181,17 +195,43 @@ pub fn latest_or_active_session() -> Result<Session> {
         return load_session(&id);
     }
 
-    let sessions_dir = project_root()?.join(STORAGE_DIR).join("sessions");
-    let mut entries = fs::read_dir(&sessions_dir)
-        .with_context(|| "No RunbookAI sessions found. Run `runbookai start` first.")?
-        .filter_map(|entry| entry.ok())
-        .filter(|entry| entry.path().is_dir())
-        .collect::<Vec<_>>();
-
-    entries.sort_by_key(|entry| entry.file_name());
-    let latest = entries
+    let sessions = list_sessions()?;
+    let latest = sessions
         .last()
         .ok_or_else(|| anyhow!("No RunbookAI sessions found. Run `runbookai start` first."))?;
-    let id = latest.file_name().to_string_lossy().to_string();
-    load_session(&id)
+    load_session(latest)
+}
+
+pub fn list_sessions() -> Result<Vec<String>> {
+    let sessions_dir = project_root()?.join(STORAGE_DIR).join("sessions");
+    if !sessions_dir.exists() {
+        return Ok(Vec::new());
+    }
+    let mut entries = fs::read_dir(&sessions_dir)?
+        .filter_map(|entry| entry.ok())
+        .filter(|entry| entry.path().is_dir())
+        .map(|entry| entry.file_name().to_string_lossy().to_string())
+        .collect::<Vec<_>>();
+
+    entries.sort();
+    Ok(entries)
+}
+
+pub fn search_sessions(query: &str) -> Result<Vec<Session>> {
+    let query = query.to_lowercase();
+    let ids = list_sessions()?;
+    let mut results = Vec::new();
+
+    for id in ids {
+        if let Ok(session) = load_session(&id) {
+            let match_title = session.title.to_lowercase().contains(&query);
+            let match_note = session.notes.iter().any(|n| n.content.to_lowercase().contains(&query));
+            let match_command = session.commands.iter().any(|c| c.command.to_lowercase().contains(&query));
+            
+            if match_title || match_note || match_command {
+                results.push(session);
+            }
+        }
+    }
+    Ok(results)
 }

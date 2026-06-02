@@ -111,6 +111,7 @@ pub struct GitSnapshot {
     pub branch: Option<String>,
     pub commit_hash: Option<String>,
     pub changed_files: Vec<ChangedFile>,
+    pub diff_content: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]

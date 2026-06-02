@@ -9,7 +9,16 @@ pub fn git_snapshot() -> Result<GitSnapshot> {
         branch: git_output(["rev-parse", "--abbrev-ref", "HEAD"]).ok(),
         commit_hash: git_output(["rev-parse", "HEAD"]).ok(),
         changed_files: parse_git_status()?,
+        diff_content: get_git_diff().ok(),
     })
+}
+
+pub fn get_git_diff() -> Result<String> {
+    let output = Command::new("git").args(["diff", "HEAD"]).output()?;
+    if !output.status.success() {
+        return Ok(String::new());
+    }
+    Ok(String::from_utf8_lossy(&output.stdout).to_string())
 }
 
 fn git_output<const N: usize>(args: [&str; N]) -> Result<String> {

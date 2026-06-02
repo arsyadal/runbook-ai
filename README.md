@@ -31,16 +31,20 @@ Implemented:
 - `runbookai exec "<command>"`
 - `runbookai note`
 - `runbookai stop`
+- `runbookai search "<query>"`
+- `runbookai alias`
 - `runbookai generate runbook`
 - `runbookai generate changelog`
 - `runbookai generate postmortem`
 - `runbookai generate all`
 - `runbookai export --format json`
+- Custom Handlebars templates (`.runbookai/templates/`)
+- Enhanced Git diff capture (redacted)
 - local `.runbookai/` storage
 - Git changed-file detection
 - basic error detection
 - basic secret redaction
-- 29 unit tests
+- 42 tests (29 unit + 13 integration)
 - zero clippy warnings
 
 ## Install from source

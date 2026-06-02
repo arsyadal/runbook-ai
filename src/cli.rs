@@ -51,6 +51,13 @@ pub enum Commands {
         #[arg(long)]
         output: Option<PathBuf>,
     },
+    /// Search through old sessions.
+    Search {
+        /// Query to search for.
+        query: String,
+    },
+    /// Print shell alias definitions.
+    Alias,
 }
 
 #[derive(Subcommand)]

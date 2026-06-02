@@ -1,117 +1,138 @@
 use crate::models::{ChangedFile, NoteKind, Session};
-use crate::util::{escape_table, local_time, markdown_list_or_placeholder, non_empty};
+use crate::util::{escape_table, local_time, markdown_list_or_placeholder, non_empty, project_root, STORAGE_DIR};
+use handlebars::Handlebars;
+use serde_json::json;
 use slug::slugify;
+use std::fs;
 
 pub fn render_runbook(session: &Session) -> String {
-    let root_cause = notes_by_kind(session, NoteKind::RootCause);
-    let decisions = notes_by_kind(session, NoteKind::Decision);
-    let risks = notes_by_kind(session, NoteKind::Risk);
-    let verification = successful_commands(session);
-    let failed = failed_commands(session);
-
-    format!(
-        "# Runbook: {title}\n\n\
-        ## Summary\n\n\
-        This runbook was generated from a RunbookAI session. It captures the commands, errors, changed files, notes, and verification steps from the debugging/development process.\n\n\
-        ## Session Info\n\n\
-        - Session ID: `{id}`\n\
-        - Project: `{project}`\n\
-        - Branch: {branch}\n\
-        - Started At: {started}\n\
-        - Ended At: {ended}\n\n\
-        ## Problem\n\n\
-        {problem}\n\n\
-        ## Root Cause\n\n\
-        {root_cause}\n\n\
-        ## Commands Run\n\n\
-        {commands}\n\n\
-        ## Errors Encountered\n\n\
-        {errors}\n\n\
-        ## Files Changed\n\n\
-        {files}\n\n\
-        ## Decisions\n\n\
-        {decisions}\n\n\
-        ## Fix Applied\n\n\
-        Review the changed files and successful verification commands above. Add a `decision` or `root-cause` note during the session to make this section more specific.\n\n\
-        ## Verification\n\n\
-        {verification}\n\n\
-        ## Failed Attempts\n\n\
-        {failed}\n\n\
-        ## How to Fix This Again\n\n\
-        1. Review the root cause and decisions in this runbook.\n\
-        2. Inspect the changed files listed above.\n\
-        3. Re-run the verification commands.\n\
-        4. Check the errors encountered section if the issue reappears.\n\n\
-        ## Next-Agent Brief\n\n\
-        When continuing this work, read the root cause, files changed, failed attempts, and verification sections first. Avoid repeating failed commands unless the environment has changed.\n\n\
-        ## Risks and Notes\n\n\
-        {risks}\n",
-        title = session.title,
-        id = session.id,
-        project = session.project_name,
-        branch = session.branch_name.as_deref().unwrap_or("unknown"),
-        started = local_time(session.started_at),
-        ended = session.ended_at.map(local_time).unwrap_or_else(|| "active".to_string()),
-        problem = non_empty(&session.title, "No problem description recorded."),
-        root_cause = markdown_list_or_placeholder(root_cause, "No root cause note recorded yet."),
-        commands = render_commands_table(session),
-        errors = render_errors(session),
-        files = render_changed_files(session),
-        decisions = markdown_list_or_placeholder(decisions, "No decision notes recorded."),
-        verification = markdown_list_or_placeholder(verification, "No successful verification commands recorded."),
-        failed = markdown_list_or_placeholder(failed, "No failed commands recorded."),
-        risks = markdown_list_or_placeholder(risks, "No risks recorded."),
-    )
+    render_template(session, "runbook")
 }
 
 pub fn render_changelog(session: &Session) -> String {
-    format!(
-        "# Changelog Entry: {title}\n\n\
-        ## Summary\n\n\
-        - {title}\n\n\
-        ## Changed Files\n\n\
-        {files}\n\n\
-        ## Verification\n\n\
-        {verification}\n",
-        title = session.title,
-        files = render_changed_files(session),
-        verification = markdown_list_or_placeholder(
-            successful_commands(session),
-            "No successful verification commands recorded."
-        ),
-    )
+    render_template(session, "changelog")
 }
 
 pub fn render_postmortem(session: &Session) -> String {
-    format!(
-        "# Postmortem: {title}\n\n\
-        ## Incident Summary\n\n\
-        {title}\n\n\
-        ## Impact\n\n\
-        Not recorded. Add a `risk` or `finding` note to capture impact.\n\n\
-        ## Root Cause\n\n\
-        {root_cause}\n\n\
-        ## Timeline\n\n\
-        {timeline}\n\n\
-        ## Resolution\n\n\
-        Review successful commands and changed files.\n\n\
-        ## What Went Well\n\n\
-        - Session data was recorded.\n\n\
-        ## What Could Be Improved\n\n\
-        - Add more notes during the session for richer postmortems.\n\n\
-        ## Action Items\n\n\
-        {todos}\n",
-        title = session.title,
-        root_cause = markdown_list_or_placeholder(
-            notes_by_kind(session, NoteKind::RootCause),
-            "No root cause note recorded."
-        ),
-        timeline = render_timeline(session),
-        todos = markdown_list_or_placeholder(
-            notes_by_kind(session, NoteKind::Todo),
-            "No action items recorded."
-        ),
-    )
+    render_template(session, "postmortem")
+}
+
+fn render_template(session: &Session, template_name: &str) -> String {
+    let mut hb = Handlebars::new();
+    
+    // Register default templates
+    let _ = hb.register_template_string("runbook", default_runbook_template());
+    let _ = hb.register_template_string("changelog", default_changelog_template());
+    let _ = hb.register_template_string("postmortem", default_postmortem_template());
+
+    // Try to load custom templates from .runbookai/templates/
+    if let Ok(root) = project_root() {
+        let template_dir = root.join(STORAGE_DIR).join("templates");
+        let template_path = template_dir.join(format!("{}.md", template_name));
+        if template_path.exists() {
+            if let Ok(content) = fs::read_to_string(template_path) {
+                let _ = hb.register_template_string(template_name, content);
+            }
+        }
+    }
+
+    let data = json!({
+        "title": session.title,
+        "id": session.id,
+        "projectName": session.project_name,
+        "branch": session.branch_name.as_deref().unwrap_or("unknown"),
+        "startedAt": local_time(session.started_at),
+        "endedAt": session.ended_at.map(local_time).unwrap_or_else(|| "active".to_string()),
+        "problem": non_empty(&session.title, "No problem description recorded."),
+        "rootCause": markdown_list_or_placeholder(notes_by_kind(session, NoteKind::RootCause), "No root cause note recorded yet."),
+        "commands": render_commands_table(session),
+        "errors": render_errors(session),
+        "files": render_changed_files(session),
+        "diff": session.git_after.as_ref().and_then(|g| g.diff_content.as_ref()).or_else(|| {
+             session.git_before.as_ref().and_then(|g| g.diff_content.as_ref())
+        }).unwrap_or(&"No diff captured.".to_string()),
+        "decisions": markdown_list_or_placeholder(notes_by_kind(session, NoteKind::Decision), "No decision notes recorded."),
+        "verification": markdown_list_or_placeholder(successful_commands(session), "No successful verification commands recorded."),
+        "failed": markdown_list_or_placeholder(failed_commands(session), "No failed commands recorded."),
+        "risks": markdown_list_or_placeholder(notes_by_kind(session, NoteKind::Risk), "No risks recorded."),
+        "timeline": render_timeline(session),
+        "todos": markdown_list_or_placeholder(notes_by_kind(session, NoteKind::Todo), "No action items recorded."),
+    });
+
+    hb.render(template_name, &data).unwrap_or_else(|e| format!("Error rendering template: {}", e))
+}
+
+fn default_runbook_template() -> &'static str {
+    "# Runbook: {{title}}\n\n\
+    ## Summary\n\n\
+    This runbook was generated from a RunbookAI session. It captures the commands, errors, changed files, notes, and verification steps from the debugging/development process.\n\n\
+    ## Session Info\n\n\
+    - Session ID: `{{id}}`\n\
+    - Project: `{{projectName}}`\n\
+    - Branch: {{branch}}\n\
+    - Started At: {{startedAt}}\n\
+    - Ended At: {{endedAt}}\n\n\
+    ## Problem\n\n\
+    {{problem}}\n\n\
+    ## Root Cause\n\n\
+    {{rootCause}}\n\n\
+    ## Commands Run\n\n\
+    {{{commands}}}\n\n\
+    ## Errors Encountered\n\n\
+    {{errors}}\n\n\
+    ## Files Changed\n\n\
+    {{files}}\n\n\
+    ## Code Changes (Diff)\n\n\
+    ```diff\n\
+    {{diff}}\n\
+    ```\n\n\
+    ## Decisions\n\n\
+    {{decisions}}\n\n\
+    ## Fix Applied\n\n\
+    Review the changed files and successful verification commands above. Add a `decision` or `root-cause` note during the session to make this section more specific.\n\n\
+    ## Verification\n\n\
+    {{verification}}\n\n\
+    ## Failed Attempts\n\n\
+    {{failed}}\n\n\
+    ## How to Fix This Again\n\n\
+    1. Review the root cause and decisions in this runbook.\n\
+    2. Inspect the changed files listed above.\n\
+    3. Re-run the verification commands.\n\
+    4. Check the errors encountered section if the issue reappears.\n\n\
+    ## Next-Agent Brief\n\n\
+    When continuing this work, read the root cause, files changed, failed attempts, and verification sections first. Avoid repeating failed commands unless the environment has changed.\n\n\
+    ## Risks and Notes\n\n\
+    {{risks}}\n"
+}
+
+fn default_changelog_template() -> &'static str {
+    "# Changelog Entry: {{title}}\n\n\
+    ## Summary\n\n\
+    - {{title}}\n\n\
+    ## Changed Files\n\n\
+    {{files}}\n\n\
+    ## Verification\n\n\
+    {{verification}}\n"
+}
+
+fn default_postmortem_template() -> &'static str {
+    "# Postmortem: {{title}}\n\n\
+    ## Incident Summary\n\n\
+    {{title}}\n\n\
+    ## Impact\n\n\
+    Not recorded. Add a `risk` or `finding` note to capture impact.\n\n\
+    ## Root Cause\n\n\
+    {{rootCause}}\n\n\
+    ## Timeline\n\n\
+    {{{timeline}}}\n\n\
+    ## Resolution\n\n\
+    Review successful commands and changed files.\n\n\
+    ## What Went Well\n\n\
+    - Session data was recorded.\n\n\
+    ## What Could Be Improved\n\n\
+    - Add more notes during the session for richer postmortems.\n\n\
+    ## Action Items\n\n\
+    {{todos}}\n"
 }
 
 fn render_commands_table(session: &Session) -> String {
@@ -318,6 +339,7 @@ mod tests {
                         deletions: None,
                     },
                 ],
+                diff_content: Some("some diff".to_string()),
             }),
         }
     }
