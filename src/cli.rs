@@ -61,6 +61,17 @@ pub enum Commands {
     },
     /// Print shell alias definitions.
     Alias,
+    /// Run as an MCP (Model Context Protocol) server.
+    Mcp {
+        #[command(subcommand)]
+        subcommand: McpSubcommand,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum McpSubcommand {
+    /// Start the MCP server over stdio.
+    Serve,
 }
 
 #[derive(Subcommand)]

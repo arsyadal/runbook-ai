@@ -41,6 +41,7 @@ Implemented:
 - `runbookai stop`
 - `runbookai search "<query>"`
 - `runbookai alias`
+- `runbookai mcp serve`
 - `runbookai generate runbook`
 - `runbookai generate changelog`
 - `runbookai generate postmortem`
@@ -48,12 +49,34 @@ Implemented:
 - `runbookai export --format json`
 - Custom Handlebars templates (`.runbookai/templates/`)
 - Enhanced Git diff capture (redacted)
+- MCP (Model Context Protocol) Server support
 - local `.runbookai/` storage
 - Git changed-file detection
 - basic error detection
 - basic secret redaction
 - 42 tests (29 unit + 13 integration)
 - zero clippy warnings
+
+## MCP Server Support
+
+RunbookAI supports the **Model Context Protocol (MCP)**. This allows AI agents (like Claude Desktop or Cursor) to directly query your previous sessions.
+
+To use it with Claude Desktop, add this to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "runbookai": {
+      "command": "runbookai",
+      "args": ["mcp", "serve"]
+    }
+  }
+}
+```
+
+Capabilities:
+- **Tools:** `search_sessions` (search through old sessions).
+- **Resources:** `runbook://sessions/<id>` (read full session data as JSON).
 
 ## Install from source
 

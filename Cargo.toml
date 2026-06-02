@@ -18,9 +18,10 @@ handlebars = "6.4.1"
 regex = "1"
 reqwest = { version = "0.13.4", features = ["json"] }
 serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+serde_json = { version = "1", features = ["preserve_order"] }
 slug = "0.1"
 tokio = { version = "1.52.3", features = ["full"] }
+tokio-util = { version = "0.7.18", features = ["codec"] }
 uuid = { version = "1", features = ["v4", "serde"] }
 
 [dev-dependencies]

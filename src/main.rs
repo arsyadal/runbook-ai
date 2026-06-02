@@ -8,13 +8,14 @@ mod config;
 mod detect;
 mod export;
 mod git;
+mod mcp;
 mod models;
 mod redact;
 mod render;
 mod session;
 mod util;
 
-use cli::{Cli, Commands, GenerateTarget};
+use cli::{Cli, Commands, GenerateTarget, McpSubcommand};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -31,6 +32,9 @@ async fn main() -> Result<()> {
         Commands::Export { format, output } => export::export(format, output),
         Commands::Search { query } => search(&query),
         Commands::Alias => print_aliases(),
+        Commands::Mcp { subcommand } => match subcommand {
+            McpSubcommand::Serve => mcp::run_server().await,
+        },
     }
 }
 
