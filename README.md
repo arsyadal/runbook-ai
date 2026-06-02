@@ -1,77 +1,181 @@
-# runbook-ai
+# RunbookAI
 
-Runbook AI adalah CLI untuk merekam proses debugging/development dengan AI coding agent, lalu menghasilkan dokumentasi operasional seperti runbook, changelog, dan postmortem.
+Turn your AI coding agent sessions into reusable runbooks, changelogs, and postmortems.
 
-## Fitur
+RunbookAI records commands, changed files, errors, and technical decisions during debugging, then generates clean documentation so your fix process never disappears in terminal history again.
 
-- Merekam sesi kerja debugging/development.
-- Menjalankan command melalui `rb exec` dan menyimpan output-nya.
-- Menambahkan catatan keputusan, finding, todo, risk, workaround, dan root cause.
-- Menangkap git diff sebelum dan sesudah sesi.
-- Menghasilkan dokumen `RUNBOOK.md`, `CHANGELOG.md`, dan `POSTMORTEM.md`.
+> Not session memory. Engineering memory.
 
-## Instalasi
+## Why
 
-Pastikan Rust sudah terpasang, lalu jalankan:
+AI coding tools like Claude Code, Cursor, Codex, Gemini CLI, OpenCode, pi, and Copilot can help fix bugs fast. But the useful process often stays trapped in chat/session logs:
+
+- what commands were run,
+- what errors appeared,
+- what files changed,
+- what failed,
+- what root cause was found,
+- how the fix was verified.
+
+RunbookAI converts that process into repo-friendly Markdown documentation.
+
+## Status
+
+Early Rust MVP — modular, tested, and lint-clean.
+
+Implemented:
+
+- `runbookai init`
+- `runbookai start`
+- `runbookai status`
+- `runbookai exec "<command>"`
+- `runbookai note`
+- `runbookai stop`
+- `runbookai generate runbook`
+- `runbookai generate changelog`
+- `runbookai generate postmortem`
+- `runbookai generate all`
+- `runbookai export --format json`
+- local `.runbookai/` storage
+- Git changed-file detection
+- basic error detection
+- basic secret redaction
+- 29 unit tests
+- zero clippy warnings
+
+## Install from source
 
 ```bash
-cargo build
+cargo install --path .
 ```
 
-Untuk menjalankan langsung:
+Or run directly:
 
 ```bash
 cargo run -- --help
 ```
 
-## Penggunaan
+## Quickstart
 
-Inisialisasi storage Runbook di project:
-
-```bash
-cargo run -- init
-```
-
-Mulai sesi recording:
+Initialize storage:
 
 ```bash
-cargo run -- start "Fix bug login"
+runbookai init
 ```
 
-Jalankan command dan rekam hasilnya:
+Start a session:
 
 ```bash
-cargo run -- exec "cargo test"
+runbookai start "Fix login 401 error"
 ```
 
-Tambahkan catatan:
+Run commands through RunbookAI:
 
 ```bash
-cargo run -- note --type decision "Gunakan pendekatan validasi input di layer CLI"
+runbookai exec "npm test"
+runbookai exec "npm run build"
 ```
 
-Lihat status sesi:
+Add notes:
 
 ```bash
-cargo run -- status
+runbookai note --type root-cause "JWT secret was missing in test environment."
+runbookai note --type decision "Validate env during app bootstrap."
+runbookai note --type risk "Production env variables must not be renamed."
 ```
 
-Selesaikan sesi:
+Check status:
 
 ```bash
-cargo run -- stop
+runbookai status
 ```
 
-Generate dokumentasi:
+Stop recording:
 
 ```bash
-cargo run -- generate all
+runbookai stop
 ```
 
-## Struktur Output
+Generate docs:
 
-Secara default, data sesi disimpan di `.rb/` dan dokumen hasil generate disimpan ke `docs/runbooks/`.
+```bash
+runbookai generate all
+```
 
-## Status
+Generated files are written to:
 
-Project ini masih dalam tahap awal pengembangan.
+```txt
+docs/runbooks/
+```
+
+Session data is stored locally in:
+
+```txt
+.runbookai/
+```
+
+## Project Structure
+
+```
+src/
+  main.rs      # CLI entry point and command routing
+  cli.rs       # Clap argument definitions
+  models.rs    # Domain types (Session, CommandRecord, Note, etc.)
+  config.rs    # Config loading
+  session.rs   # Session lifecycle (init, start, stop, status, load, save)
+  git.rs       # Git snapshot and diff parsing
+  command.rs   # Command execution and note recording
+  redact.rs    # Secret redaction
+  detect.rs    # Error pattern detection
+  render.rs    # Markdown generators (runbook, changelog, postmortem)
+  export.rs    # JSON / Markdown export
+  util.rs      # Shared helpers
+```
+
+## Example workflow
+
+```bash
+runbookai init
+runbookai start "Fix auth test failure"
+runbookai exec "npm test"
+runbookai note --type finding "Login test fails with 401 for valid credentials."
+runbookai note --type root-cause "JWT secret is missing in the test environment."
+runbookai exec "npm run build"
+runbookai stop
+runbookai generate runbook
+```
+
+Example output:
+
+```txt
+docs/runbooks/2026-06-01-fix-auth-test-failure.md
+```
+
+The generated runbook includes:
+
+- session summary,
+- command history,
+- detected errors,
+- changed files,
+- decisions,
+- root cause,
+- verification steps,
+- failed attempts,
+- next-agent brief.
+
+## How it differs from `/resume` and memory tools
+
+`/resume` and session history help continue a conversation inside one AI tool.
+
+RunbookAI creates durable engineering artifacts that live in your repo and can be read by humans, teammates, and future agents.
+
+## Relationship with ContextLint
+
+- ContextLint = before AI session: audit and clean project context.
+- RunbookAI = during/after AI session: preserve the fix process as reusable knowledge.
+
+They are separate tools but can become part of a broader ContextOps workflow later.
+
+## Product principle
+
+If an AI agent helped fix it, the process should become reusable knowledge.
