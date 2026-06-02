@@ -104,8 +104,19 @@ fn default_runbook_template() -> &'static str {
     2. Inspect the changed files listed above.\n\
     3. Re-run the verification commands.\n\
     4. Check the errors encountered section if the issue reappears.\n\n\
-    ## Next-Agent Brief\n\n\
-    When continuing this work, read the root cause, files changed, failed attempts, and verification sections first. Avoid repeating failed commands unless the environment has changed.\n\n\
+    ## Next-Agent Brief (Context Bridge)\n\n\
+    > **Usage Hint:** Give this section to your next AI agent if you hit a token limit or switch providers. It distilled the essence of this session to prevent redundant work.\n\n\
+    ### Current Status\n\
+    When continuing this work, focus on these verified findings:\n\
+    - **Root Cause:** {{rootCause}}\n\
+    - **Verified Fix Steps:** Review successful verification commands.\n\
+    - **Files to Watch:** {{files}}\n\n\
+    ### Avoid These Failed Paths\n\
+    To save tokens and time, do NOT repeat these failed attempts:\n\
+    {{failed}}\n\n\
+    ### Technical Context\n\
+    - Branch: {{branch}}\n\
+    - Last Known Good State: Review successful commands.\n\n\
     ## Risks and Notes\n\n\
     {{risks}}\n"
 }

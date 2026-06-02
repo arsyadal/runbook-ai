@@ -2,7 +2,15 @@
 
 Turn your AI coding agent sessions into reusable runbooks, changelogs, and postmortems.
 
-RunbookAI records commands, changed files, errors, and technical decisions during debugging, then generates clean documentation so your fix process never disappears in terminal history again.
+> **Don't worry about your AI agent's limit. RunbookAI has your back.**
+
+RunbookAI is your **Context Insurance**. It records commands, changed files, errors, and technical decisions during debugging, then generates clean documentation so your progress never vanishes—even if your AI agent hits a token limit or you need to switch providers mid-session.
+
+## The "Dreaded" Session Reset is Over
+
+Ever hit a "message cap" mid-debugging? Switching from Claude to Cursor and having to explain everything again? 
+
+RunbookAI acts as your **Universal Context Bridge**. Generate a `Next-Agent Brief` and give it to your next AI provider. They'll pick up exactly where you left off, saving you time, tokens, and sanity.
 
 > Not session memory. Engineering memory.
 
