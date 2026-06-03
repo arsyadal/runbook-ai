@@ -34,6 +34,7 @@ Early Rust MVP — modular, tested, and lint-clean.
 Implemented:
 
 - Session lifecycle: `init`, `start`, `status`, `stop`
+- Environment diagnostics: `doctor`
 - Command capture: `exec "<command>"` and shell-hook based recording
 - Manual notes: `note --type <kind> "..."`
 - Documentation generation: `generate runbook`, `changelog`, `postmortem`, `pr`, `all`
@@ -47,7 +48,7 @@ Implemented:
 - Git changed-file detection
 - Basic error detection
 - Basic secret redaction
-- 42 tests (29 unit + 13 integration)
+- 43 tests (29 unit + 14 integration)
 - Zero clippy warnings
 
 ## Shell Integration (No More `exec`)
@@ -145,6 +146,12 @@ Check status:
 runbookai status
 ```
 
+Diagnose your local setup:
+
+```bash
+runbookai doctor
+```
+
 Stop recording:
 
 ```bash
@@ -177,6 +184,7 @@ src/
   cli.rs       # Clap argument definitions
   models.rs    # Domain types (Session, CommandRecord, Note, etc.)
   config.rs    # Config loading
+  doctor.rs    # Environment diagnostics
   session.rs   # Session lifecycle (init, start, stop, status, load, save)
   git.rs       # Git snapshot and diff parsing
   command.rs   # Command execution and note recording

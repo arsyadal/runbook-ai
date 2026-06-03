@@ -22,6 +22,8 @@ pub enum Commands {
     },
     /// Show active session status.
     Status,
+    /// Diagnose local RunbookAI setup and environment.
+    Doctor,
     /// Execute and record a command.
     Exec {
         /// Command to run, for example: "npm test".

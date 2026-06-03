@@ -64,6 +64,22 @@ fn init_creates_storage_dirs() {
 }
 
 #[test]
+fn doctor_reports_environment() {
+    let dir = setup_repo();
+    let repo = dir.path();
+
+    runbookai()
+        .arg("doctor")
+        .current_dir(repo)
+        .assert()
+        .success()
+        .stdout(predicates::str::contains("RunbookAI Doctor"))
+        .stdout(predicates::str::contains("Git:"))
+        .stdout(predicates::str::contains("Storage:"))
+        .stdout(predicates::str::contains("AI provider:"));
+}
+
+#[test]
 fn start_creates_active_session() {
     let dir = setup_repo();
     let repo = dir.path();

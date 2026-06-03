@@ -6,6 +6,7 @@ mod cli;
 mod command;
 mod config;
 mod detect;
+mod doctor;
 mod export;
 mod git;
 mod mcp;
@@ -25,6 +26,7 @@ async fn main() -> Result<()> {
         Commands::Init => session::init(),
         Commands::Start { title } => session::start(title),
         Commands::Status => session::status(),
+        Commands::Doctor => doctor::run(),
         Commands::Exec { command } => command::exec_command(&command),
         Commands::Note { kind, content } => command::note(kind, content),
         Commands::Stop => session::stop(),
