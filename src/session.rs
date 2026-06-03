@@ -113,7 +113,7 @@ pub fn stop() -> Result<()> {
     let mut session = load_session(&id)?;
     session.ended_at = Some(Utc::now());
     session.status = SessionStatus::Completed;
-    
+
     let config = crate::config::load_config()?;
     let mut snapshot_after = git_snapshot().ok();
     if let Some(ref mut s) = snapshot_after {
@@ -225,9 +225,15 @@ pub fn search_sessions(query: &str) -> Result<Vec<Session>> {
     for id in ids {
         if let Ok(session) = load_session(&id) {
             let match_title = session.title.to_lowercase().contains(&query);
-            let match_note = session.notes.iter().any(|n| n.content.to_lowercase().contains(&query));
-            let match_command = session.commands.iter().any(|c| c.command.to_lowercase().contains(&query));
-            
+            let match_note = session
+                .notes
+                .iter()
+                .any(|n| n.content.to_lowercase().contains(&query));
+            let match_command = session
+                .commands
+                .iter()
+                .any(|c| c.command.to_lowercase().contains(&query));
+
             if match_title || match_note || match_command {
                 results.push(session);
             }

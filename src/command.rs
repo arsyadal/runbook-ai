@@ -106,12 +106,18 @@ pub fn record_headless(
     let config = load_config()?;
     let cwd = std::env::current_dir()?;
 
-    let stdout_clean = stdout.map(|s| maybe_redact(&s, config.redact_secrets)).transpose()?.unwrap_or_default();
-    let stderr_clean = stderr.map(|s| maybe_redact(&s, config.redact_secrets)).transpose()?.unwrap_or_default();
-    
+    let stdout_clean = stdout
+        .map(|s| maybe_redact(&s, config.redact_secrets))
+        .transpose()?
+        .unwrap_or_default();
+    let stderr_clean = stderr
+        .map(|s| maybe_redact(&s, config.redact_secrets))
+        .transpose()?
+        .unwrap_or_default();
+
     let stdout_preview = preview(&stdout_clean, config.max_output_length);
     let stderr_preview = preview(&stderr_clean, config.max_output_length);
-    
+
     let mut detected_errors = detect_errors(&stdout_preview, "stdout")?;
     detected_errors.extend(detect_errors(&stderr_preview, "stderr")?);
 
@@ -122,8 +128,16 @@ pub fn record_headless(
         command: command_str,
         exit_code,
         duration_ms,
-        stdout_preview: if stdout_preview.is_empty() { None } else { Some(stdout_preview) },
-        stderr_preview: if stderr_preview.is_empty() { None } else { Some(stderr_preview) },
+        stdout_preview: if stdout_preview.is_empty() {
+            None
+        } else {
+            Some(stdout_preview)
+        },
+        stderr_preview: if stderr_preview.is_empty() {
+            None
+        } else {
+            Some(stderr_preview)
+        },
         detected_errors,
     };
 

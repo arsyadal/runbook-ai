@@ -47,74 +47,92 @@ pub async fn run_server() -> Result<()> {
 async fn handle_request(req: JsonRpcRequest) -> Result<()> {
     match req.method.as_str() {
         "initialize" => {
-            send_response(req.id, json!({
-                "protocolVersion": "2024-11-05",
-                "capabilities": {
-                    "resources": {},
-                    "tools": {}
-                },
-                "serverInfo": {
-                    "name": "runbookai",
-                    "version": env!("CARGO_PKG_VERSION")
-                }
-            }))?;
+            send_response(
+                req.id,
+                json!({
+                    "protocolVersion": "2024-11-05",
+                    "capabilities": {
+                        "resources": {},
+                        "tools": {}
+                    },
+                    "serverInfo": {
+                        "name": "runbookai",
+                        "version": env!("CARGO_PKG_VERSION")
+                    }
+                }),
+            )?;
         }
         "resources/list" => {
             let sessions = list_sessions()?;
-            let resources: Vec<Value> = sessions.into_iter().map(|id| {
-                json!({
-                    "uri": format!("runbook://sessions/{}", id),
-                    "name": format!("Session {}", id),
-                    "mimeType": "application/json"
+            let resources: Vec<Value> = sessions
+                .into_iter()
+                .map(|id| {
+                    json!({
+                        "uri": format!("runbook://sessions/{}", id),
+                        "name": format!("Session {}", id),
+                        "mimeType": "application/json"
+                    })
                 })
-            }).collect();
+                .collect();
             send_response(req.id, json!({ "resources": resources }))?;
         }
         "resources/read" => {
-            let uri = req.params.as_ref()
+            let uri = req
+                .params
+                .as_ref()
                 .and_then(|p| p["uri"].as_str())
                 .ok_or_else(|| anyhow::anyhow!("Missing URI"))?;
-            
+
             if let Some(id) = uri.strip_prefix("runbook://sessions/") {
                 let session = load_session(id)?;
-                send_response(req.id, json!({
-                    "contents": [{
-                        "uri": uri,
-                        "mimeType": "application/json",
-                        "text": serde_json::to_string(&session)?
-                    }]
-                }))?;
+                send_response(
+                    req.id,
+                    json!({
+                        "contents": [{
+                            "uri": uri,
+                            "mimeType": "application/json",
+                            "text": serde_json::to_string(&session)?
+                        }]
+                    }),
+                )?;
             } else {
                 send_error(req.id, -32602, "Invalid URI")?;
             }
         }
         "tools/list" => {
-            send_response(req.id, json!({
-                "tools": [
-                    {
-                        "name": "search_sessions",
-                        "description": "Search through old RunbookAI sessions",
-                        "inputSchema": {
-                            "type": "object",
-                            "properties": {
-                                "query": { "type": "string" }
-                            },
-                            "required": ["query"]
+            send_response(
+                req.id,
+                json!({
+                    "tools": [
+                        {
+                            "name": "search_sessions",
+                            "description": "Search through old RunbookAI sessions",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "query": { "type": "string" }
+                                },
+                                "required": ["query"]
+                            }
                         }
-                    }
-                ]
-            }))?;
+                    ]
+                }),
+            )?;
         }
         "tools/call" => {
-            let name = req.params.as_ref()
+            let name = req
+                .params
+                .as_ref()
                 .and_then(|p| p["name"].as_str())
                 .ok_or_else(|| anyhow::anyhow!("Missing tool name"))?;
-            
+
             if name == "search_sessions" {
-                let query = req.params.as_ref()
+                let query = req
+                    .params
+                    .as_ref()
                     .and_then(|p| p["arguments"]["query"].as_str())
                     .ok_or_else(|| anyhow::anyhow!("Missing query argument"))?;
-                
+
                 let results = search_sessions(query)?;
                 let text = if results.is_empty() {
                     format!("No sessions found matching: {}", query)
@@ -126,12 +144,15 @@ async fn handle_request(req: JsonRpcRequest) -> Result<()> {
                     out
                 };
 
-                send_response(req.id, json!({
-                    "content": [{
-                        "type": "text",
-                        "text": text
-                    }]
-                }))?;
+                send_response(
+                    req.id,
+                    json!({
+                        "content": [{
+                            "type": "text",
+                            "text": text
+                        }]
+                    }),
+                )?;
             } else {
                 send_error(req.id, -32601, "Tool not found")?;
             }

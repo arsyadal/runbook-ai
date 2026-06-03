@@ -81,7 +81,10 @@ impl AIService {
             .await?;
 
         let body: serde_json::Value = res.json().await?;
-        Ok(body["choices"][0]["message"]["content"].as_str().unwrap_or("").to_string())
+        Ok(body["choices"][0]["message"]["content"]
+            .as_str()
+            .unwrap_or("")
+            .to_string())
     }
 
     async fn call_gemini(&self, context: &str) -> Result<String> {
@@ -104,6 +107,9 @@ impl AIService {
             .await?;
 
         let body: serde_json::Value = res.json().await?;
-        Ok(body["candidates"][0]["content"]["parts"][0]["text"].as_str().unwrap_or("").to_string())
+        Ok(body["candidates"][0]["content"]["parts"][0]["text"]
+            .as_str()
+            .unwrap_or("")
+            .to_string())
     }
 }

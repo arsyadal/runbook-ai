@@ -49,7 +49,8 @@ async fn main() -> Result<()> {
 fn print_shell_hook(shell: &str) -> Result<()> {
     match shell {
         "zsh" => {
-            println!(r#"# RunbookAI Zsh Integration
+            println!(
+                r#"# RunbookAI Zsh Integration
 _runbookai_preexec() {{
     export _RB_START_TIME=$(date +%s%3N)
     export _RB_LAST_CMD="$1"
@@ -67,10 +68,12 @@ _runbookai_precmd() {{
 autoload -Uz add-zsh-hook
 add-zsh-hook preexec _runbookai_preexec
 add-zsh-hook precmd _runbookai_precmd
-"#);
+"#
+            );
         }
         "bash" => {
-            println!(r#"# RunbookAI Bash Integration
+            println!(
+                r#"# RunbookAI Bash Integration
 _runbookai_bash_hook() {{
     local exit_code=$?
     if [ -n "$_RB_LAST_CMD" ]; then
@@ -82,9 +85,15 @@ _runbookai_bash_hook() {{
 }}
 trap 'export _RB_START_TIME=$(date +%s%3N); export _RB_LAST_CMD="$BASH_COMMAND"' DEBUG
 PROMPT_COMMAND="_runbookai_bash_hook; $PROMPT_COMMAND"
-"#);
+"#
+            );
         }
-        _ => return Err(anyhow::anyhow!("Unsupported shell: {}. Use 'zsh' or 'bash'.", shell)),
+        _ => {
+            return Err(anyhow::anyhow!(
+                "Unsupported shell: {}. Use 'zsh' or 'bash'.",
+                shell
+            ))
+        }
     }
     Ok(())
 }
@@ -107,7 +116,11 @@ fn search(query: &str) -> Result<()> {
         for session in results {
             println!("- {} (ID: {})", session.title, session.id);
             println!("  Started: {}", util::local_time(session.started_at));
-            println!("  Commands: {}, Notes: {}", session.commands.len(), session.notes.len());
+            println!(
+                "  Commands: {}, Notes: {}",
+                session.commands.len(),
+                session.notes.len()
+            );
             println!();
         }
     }
@@ -123,12 +136,18 @@ async fn generate(target: GenerateTarget, ai: bool) -> Result<()> {
 
     let mut ai_summary = None;
     if ai {
-        println!("Generating AI summary... (using model: {})", ai::AIService::from_env().model);
+        println!(
+            "Generating AI summary... (using model: {})",
+            ai::AIService::from_env().model
+        );
         let ai_service = ai::AIService::from_env();
         let session_json = serde_json::to_string_pretty(&s)?;
         match ai_service.summarize(&session_json).await {
             Ok(summary) => ai_summary = Some(summary),
-            Err(e) => eprintln!("AI Summary failed: {}. Continuing with default template.", e),
+            Err(e) => eprintln!(
+                "AI Summary failed: {}. Continuing with default template.",
+                e
+            ),
         }
     }
 

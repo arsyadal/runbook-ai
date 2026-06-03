@@ -33,18 +33,23 @@ Early Rust MVP — modular, tested, and lint-clean.
 
 Implemented:
 
-- `runbookai init`
-- `runbookai start`
-- `runbookai status`
-- `runbookai exec "<command>"`
-- `runbookai note`
-- `runbookai stop`
-- `runbookai search "<query>"`
-- `runbookai alias`
-- `runbookai shell-hook`
-- `runbookai mcp serve`
-- `runbookai generate runbook`
-...
+- Session lifecycle: `init`, `start`, `status`, `stop`
+- Command capture: `exec "<command>"` and shell-hook based recording
+- Manual notes: `note --type <kind> "..."`
+- Documentation generation: `generate runbook`, `changelog`, `postmortem`, `pr`, `all`
+- Session export: `export --format json|markdown`
+- Session search: `search "<query>"`
+- Shell helpers: `alias`, `shell-hook`
+- MCP server: `mcp serve`
+- Custom Handlebars templates (`.runbookai/templates/`)
+- Enhanced Git diff capture with redaction
+- Local `.runbookai/` storage
+- Git changed-file detection
+- Basic error detection
+- Basic secret redaction
+- 42 tests (29 unit + 13 integration)
+- Zero clippy warnings
+
 ## Shell Integration (No More `exec`)
 
 If you don't want to type `runbookai exec` for every command, you can integrate RunbookAI directly into your shell. This will automatically record every command you run whenever a session is active.
@@ -62,20 +67,6 @@ source <(runbookai shell-hook bash)
 Now, simply running `runbookai start "title"` is enough. Every subsequent command in that shell will be recorded automatically until you run `runbookai stop`.
 
 *Note: Shell integration captures command strings, exit codes, and duration. For full output and error capture, `runbookai exec` is still recommended.*
-- `runbookai generate changelog`
-- `runbookai generate postmortem`
-- `runbookai generate pr`
-- `runbookai generate all`
-- `runbookai export --format json`
-- Custom Handlebars templates (`.runbookai/templates/`)
-- Enhanced Git diff capture (redacted)
-- MCP (Model Context Protocol) Server support
-- local `.runbookai/` storage
-- Git changed-file detection
-- basic error detection
-- basic secret redaction
-- 42 tests (29 unit + 13 integration)
-- zero clippy warnings
 
 ## MCP Server Support
 
@@ -109,6 +100,15 @@ Or run directly:
 ```bash
 cargo run -- --help
 ```
+
+## Windows build notes
+
+On Windows, use one of these setups before running `cargo test` or `cargo clippy`:
+
+- MSVC: install **Visual Studio Build Tools** with the **Desktop development with C++** workload, then run Cargo from a Developer PowerShell/Command Prompt.
+- GNU: install MinGW binutils so `dlltool.exe` is available on `PATH`.
+
+If Git Bash resolves `link.exe` to `C:\Program Files\Git\usr\bin\link.exe`, the MSVC linker is not being used.
 
 ## Quickstart
 

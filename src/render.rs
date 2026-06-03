@@ -1,5 +1,7 @@
 use crate::models::{ChangedFile, NoteKind, Session};
-use crate::util::{escape_table, local_time, markdown_list_or_placeholder, non_empty, project_root, STORAGE_DIR};
+use crate::util::{
+    escape_table, local_time, markdown_list_or_placeholder, non_empty, project_root, STORAGE_DIR,
+};
 use handlebars::Handlebars;
 use serde_json::json;
 use slug::slugify;
@@ -65,7 +67,8 @@ fn render_template(session: &Session, template_name: &str, ai_summary: Option<&s
         "todos": markdown_list_or_placeholder(notes_by_kind(session, NoteKind::Todo), "No action items recorded."),
     });
 
-    hb.render(template_name, &data).unwrap_or_else(|e| format!("Error rendering template: {}", e))
+    hb.render(template_name, &data)
+        .unwrap_or_else(|e| format!("Error rendering template: {}", e))
 }
 
 fn default_runbook_template() -> &'static str {
