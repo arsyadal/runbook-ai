@@ -86,4 +86,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           body_path: docs/releases/${{ github.ref_name }}.md
-          files: artifacts/**/*
+          files: |
+            artifacts/**/*.tar.gz
+            artifacts/**/*.zip
