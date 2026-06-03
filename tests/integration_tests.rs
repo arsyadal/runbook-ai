@@ -76,7 +76,41 @@ fn doctor_reports_environment() {
         .stdout(predicates::str::contains("RunbookAI Doctor"))
         .stdout(predicates::str::contains("Git:"))
         .stdout(predicates::str::contains("Storage:"))
-        .stdout(predicates::str::contains("AI provider:"));
+        .stdout(predicates::str::contains("AI provider:"))
+        .stdout(predicates::str::contains("Summary:"));
+}
+
+#[test]
+fn doctor_json_outputs_valid_json() {
+    let dir = setup_repo();
+    let repo = dir.path();
+
+    let output = runbookai()
+        .args(["doctor", "--json"])
+        .current_dir(repo)
+        .assert()
+        .success()
+        .get_output()
+        .stdout
+        .clone();
+
+    let json_str = String::from_utf8(output).unwrap();
+    let parsed: serde_json::Value = serde_json::from_str(&json_str).expect("Invalid JSON output");
+    assert!(parsed["project_root"].is_string());
+    assert!(parsed["checks"].is_array());
+    assert!(parsed["summary"].is_object());
+}
+
+#[test]
+fn shell_hook_supports_powershell() {
+    runbookai()
+        .args(["shell-hook", "powershell"])
+        .assert()
+        .success()
+        .stdout(predicates::str::contains(
+            "RunbookAI PowerShell Integration",
+        ))
+        .stdout(predicates::str::contains("function global:prompt"));
 }
 
 #[test]

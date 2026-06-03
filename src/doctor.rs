@@ -1,47 +1,50 @@
 use anyhow::Result;
+use serde::Serialize;
 use std::env;
 use std::process::Command;
 
 use crate::session;
 use crate::util::{project_root, ACTIVE_SESSION_FILE, STORAGE_DIR};
 
-pub fn run() -> Result<()> {
-    let root = project_root()?;
-    let storage_dir = root.join(STORAGE_DIR);
-    let active_session_file = root.join(ACTIVE_SESSION_FILE);
+pub fn run(json: bool) -> Result<()> {
+    let report = build_report()?;
 
-    println!("RunbookAI Doctor\n");
-    println!("Project root: {}", root.display());
-
-    print_check("Git", git_status());
-    print_check(
-        "Storage",
-        if storage_dir.exists() {
-            Check::Ok(format!("{} found", STORAGE_DIR))
-        } else {
-            Check::Warn(format!("{} not found; run `runbookai init`", STORAGE_DIR))
-        },
-    );
-
-    print_check(
-        "Active session",
-        if active_session_file.exists() {
-            match session::active_session_id() {
-                Ok(id) => Check::Ok(id),
-                Err(err) => Check::Warn(format!(
-                    "active session file exists but is unreadable: {err}"
-                )),
-            }
-        } else {
-            Check::Ok("none".to_string())
-        },
-    );
-
-    print_check("AI provider", ai_provider_status());
-    print_check("Rust toolchain", rust_toolchain_status());
-    print_check("Windows linker", windows_linker_status());
+    if json {
+        println!("{}", serde_json::to_string_pretty(&report)?);
+    } else {
+        print_text_report(&report);
+    }
 
     Ok(())
+}
+
+#[derive(Serialize)]
+struct DoctorReport {
+    project_root: String,
+    checks: Vec<DoctorCheck>,
+    summary: DoctorSummary,
+}
+
+#[derive(Serialize)]
+struct DoctorCheck {
+    label: String,
+    status: CheckStatus,
+    message: String,
+}
+
+#[derive(Clone, Copy, Serialize)]
+#[serde(rename_all = "lowercase")]
+enum CheckStatus {
+    Pass,
+    Warn,
+    Fail,
+}
+
+#[derive(Serialize)]
+struct DoctorSummary {
+    pass: usize,
+    warn: usize,
+    fail: usize,
 }
 
 enum Check {
@@ -50,12 +53,100 @@ enum Check {
     Error(String),
 }
 
-fn print_check(label: &str, check: Check) {
+fn build_report() -> Result<DoctorReport> {
+    let root = project_root()?;
+    let storage_dir = root.join(STORAGE_DIR);
+    let active_session_file = root.join(ACTIVE_SESSION_FILE);
+
+    let checks = vec![
+        to_doctor_check("Git", git_status()),
+        to_doctor_check(
+            "Storage",
+            if storage_dir.exists() {
+                Check::Ok(format!("{} found", STORAGE_DIR))
+            } else {
+                Check::Warn(format!("{} not found; run `runbookai init`", STORAGE_DIR))
+            },
+        ),
+        to_doctor_check(
+            "Active session",
+            if active_session_file.exists() {
+                match session::active_session_id() {
+                    Ok(id) => Check::Ok(id),
+                    Err(err) => Check::Warn(format!(
+                        "active session file exists but is unreadable: {err}"
+                    )),
+                }
+            } else {
+                Check::Ok("none".to_string())
+            },
+        ),
+        to_doctor_check("AI provider", ai_provider_status()),
+        to_doctor_check("Rust toolchain", rust_toolchain_status()),
+        to_doctor_check("Windows linker", windows_linker_status()),
+    ];
+
+    let summary = summarize(&checks);
+
+    Ok(DoctorReport {
+        project_root: root.display().to_string(),
+        checks,
+        summary,
+    })
+}
+
+fn to_doctor_check(label: &str, check: Check) -> DoctorCheck {
     match check {
-        Check::Ok(message) => println!("{label}: OK - {message}"),
-        Check::Warn(message) => println!("{label}: WARN - {message}"),
-        Check::Error(message) => println!("{label}: ERROR - {message}"),
+        Check::Ok(message) => DoctorCheck {
+            label: label.to_string(),
+            status: CheckStatus::Pass,
+            message,
+        },
+        Check::Warn(message) => DoctorCheck {
+            label: label.to_string(),
+            status: CheckStatus::Warn,
+            message,
+        },
+        Check::Error(message) => DoctorCheck {
+            label: label.to_string(),
+            status: CheckStatus::Fail,
+            message,
+        },
     }
+}
+
+fn summarize(checks: &[DoctorCheck]) -> DoctorSummary {
+    DoctorSummary {
+        pass: checks
+            .iter()
+            .filter(|check| matches!(check.status, CheckStatus::Pass))
+            .count(),
+        warn: checks
+            .iter()
+            .filter(|check| matches!(check.status, CheckStatus::Warn))
+            .count(),
+        fail: checks
+            .iter()
+            .filter(|check| matches!(check.status, CheckStatus::Fail))
+            .count(),
+    }
+}
+
+fn print_text_report(report: &DoctorReport) {
+    println!("RunbookAI Doctor\n");
+    println!("Project root: {}", report.project_root);
+    for check in &report.checks {
+        let status = match check.status {
+            CheckStatus::Pass => "PASS",
+            CheckStatus::Warn => "WARN",
+            CheckStatus::Fail => "FAIL",
+        };
+        println!("{}: {} - {}", check.label, status, check.message);
+    }
+    println!(
+        "\nSummary: {} pass, {} warn, {} fail",
+        report.summary.pass, report.summary.warn, report.summary.fail
+    );
 }
 
 fn git_status() -> Check {

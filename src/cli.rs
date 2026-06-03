@@ -23,7 +23,11 @@ pub enum Commands {
     /// Show active session status.
     Status,
     /// Diagnose local RunbookAI setup and environment.
-    Doctor,
+    Doctor {
+        /// Print machine-readable JSON output.
+        #[arg(long)]
+        json: bool,
+    },
     /// Execute and record a command.
     Exec {
         /// Command to run, for example: "npm test".
@@ -65,7 +69,7 @@ pub enum Commands {
     Alias,
     /// Generate shell hook script for automatic recording.
     ShellHook {
-        /// Shell type (zsh, bash).
+        /// Shell type (zsh, bash, powershell).
         #[arg(default_value = "zsh")]
         shell: String,
     },

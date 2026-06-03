@@ -48,14 +48,14 @@ Implemented:
 - Git changed-file detection
 - Basic error detection
 - Basic secret redaction
-- 43 tests (29 unit + 14 integration)
+- 45 tests (29 unit + 16 integration)
 - Zero clippy warnings
 
 ## Shell Integration (No More `exec`)
 
 If you don't want to type `runbookai exec` for every command, you can integrate RunbookAI directly into your shell. This will automatically record every command you run whenever a session is active.
 
-Add this to your `.zshrc` or `.bashrc`:
+Add this to your `.zshrc`, `.bashrc`, or PowerShell profile:
 
 ```bash
 # For Zsh
@@ -65,9 +65,36 @@ source <(runbookai shell-hook zsh)
 source <(runbookai shell-hook bash)
 ```
 
+```powershell
+# For PowerShell
+runbookai shell-hook powershell | Invoke-Expression
+```
+
 Now, simply running `runbookai start "title"` is enough. Every subsequent command in that shell will be recorded automatically until you run `runbookai stop`.
 
-*Note: Shell integration captures command strings, exit codes, and duration. For full output and error capture, `runbookai exec` is still recommended.*
+*Note: Zsh/Bash shell integration captures command strings, exit codes, and duration. PowerShell shell integration captures command strings and exit codes with duration set to `0`. For full output and error capture, `runbookai exec` is still recommended.*
+
+## AI Provider Configuration
+
+RunbookAI can generate AI-assisted summaries with:
+
+```bash
+runbookai generate runbook --ai
+runbookai generate pr --ai
+runbookai generate all --ai
+```
+
+Provider selection is environment-based:
+
+- `OPENAI_API_KEY` → OpenAI, default model `gpt-4o`
+- `GEMINI_API_KEY` → Gemini, default model `gemini-1.5-pro`
+- no API key → local Ollama, default model `llama3`
+
+Override the model with:
+
+```bash
+RUNBOOKAI_MODEL=llama3.1 runbookai generate runbook --ai
+```
 
 ## MCP Server Support
 
@@ -150,6 +177,7 @@ Diagnose your local setup:
 
 ```bash
 runbookai doctor
+runbookai doctor --json
 ```
 
 Stop recording:

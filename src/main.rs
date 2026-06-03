@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
         Commands::Init => session::init(),
         Commands::Start { title } => session::start(title),
         Commands::Status => session::status(),
-        Commands::Doctor => doctor::run(),
+        Commands::Doctor { json } => doctor::run(json),
         Commands::Exec { command } => command::exec_command(&command),
         Commands::Note { kind, content } => command::note(kind, content),
         Commands::Stop => session::stop(),
@@ -90,9 +90,31 @@ PROMPT_COMMAND="_runbookai_bash_hook; $PROMPT_COMMAND"
 "#
             );
         }
+        "powershell" | "pwsh" => {
+            println!(
+                r#"# RunbookAI PowerShell Integration
+$global:RunbookAILastHistoryId = $null
+
+function global:prompt {{
+    $exitCode = if ($LASTEXITCODE -eq $null) {{ 0 }} else {{ $LASTEXITCODE }}
+    $history = Get-History -Count 1
+    if ($history -and $history.Id -ne $global:RunbookAILastHistoryId) {{
+        $global:RunbookAILastHistoryId = $history.Id
+        Start-Process runbookai -ArgumentList @(
+            'record',
+            '--command', $history.CommandLine,
+            '--exit-code', $exitCode,
+            '--duration', 0
+        ) -NoNewWindow -Wait | Out-Null
+    }}
+    "PS $($executionContext.SessionState.Path.CurrentLocation)$('>' * ($nestedPromptLevel + 1)) "
+}}
+"#
+            );
+        }
         _ => {
             return Err(anyhow::anyhow!(
-                "Unsupported shell: {}. Use 'zsh' or 'bash'.",
+                "Unsupported shell: {}. Use 'zsh', 'bash', or 'powershell'.",
                 shell
             ))
         }
