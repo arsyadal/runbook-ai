@@ -129,6 +129,24 @@ Or run directly:
 cargo run -- --help
 ```
 
+## Release builds
+
+Tagged releases are built automatically for Linux, macOS, and Windows.
+
+Create and push a version tag:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+GitHub Actions will publish archives for:
+
+- `x86_64-unknown-linux-gnu`
+- `x86_64-apple-darwin`
+- `aarch64-apple-darwin`
+- `x86_64-pc-windows-msvc`
+
 ## Windows build notes
 
 On Windows, use one of these setups before running `cargo test` or `cargo clippy`:
