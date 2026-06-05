@@ -5,7 +5,7 @@ All notable changes in RunbookAI, from the first commit to the latest update.
 ## Unreleased
 
 ### Documentation
-- Added a short product demo video and poster image to the README.
+- Added a short animated product demo GIF, MP4 video, and poster image to the README.
 - Added real-world use cases to the README to make RunbookAI's practical value clearer.
 - Covered production incidents, AI-agent handoff, provider switching, PR descriptions, team knowledge, and risky-change audits.
 

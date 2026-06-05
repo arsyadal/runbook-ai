@@ -29,11 +29,9 @@ RunbookAI converts that process into repo-friendly Markdown documentation.
 
 ## Short Demo Video
 
-<a href="docs/assets/runbook-demo.mp4">
-  <img src="docs/assets/runbook-demo-poster.png" alt="RunbookAI short demo video preview" width="100%">
-</a>
+![RunbookAI short demo video](docs/assets/runbook-demo.gif)
 
-Watch the short usage demo: [runbook-demo.mp4](docs/assets/runbook-demo.mp4)
+Watch or download the MP4 version: [runbook-demo.mp4](docs/assets/runbook-demo.mp4)
 
 ## Comparison: With RunbookAI vs Without RunbookAI
 
