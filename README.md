@@ -48,6 +48,8 @@ Media assets: [PNG](docs/assets/runbook-comparison.png) · [JPG](docs/assets/run
 
 Early Rust MVP — modular, tested, and lint-clean.
 
+See the full project history in [CHANGELOG.md](CHANGELOG.md).
+
 Implemented:
 
 - Session lifecycle: `init`, `start`, `status`, `stop`

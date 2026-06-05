@@ -1,6 +1,6 @@
 <svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">Perbandingan bekerja tanpa RunbookAI dan dengan RunbookAI</title>
-  <desc id="desc">Infografik visual yang membandingkan workflow AI coding agent tanpa dokumentasi otomatis dan dengan RunbookAI.</desc>
+  <title id="title">Working without RunbookAI compared to working with RunbookAI</title>
+  <desc id="desc">A visual infographic comparing an AI coding agent workflow without automatic documentation against a workflow powered by RunbookAI.</desc>
   <defs>
     <radialGradient id="bgGlow" cx="50%" cy="10%" r="85%">
       <stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.26"/>
@@ -33,7 +33,7 @@
   <circle cx="130" cy="635" r="190" fill="#F43F5E" opacity="0.10"/>
 
   <text x="80" y="82" fill="#F8FAFC" font-family="Segoe UI, sans-serif" font-size="46" font-weight="800">AI Session: Chaos vs Runbook</text>
-  <text x="82" y="122" fill="#CBD5E1" font-family="Segoe UI, sans-serif" font-size="20">Tanpa kehilangan konteks. Tanpa mengulang penjelasan. Siap dilanjutkan manusia atau AI agent berikutnya.</text>
+  <text x="82" y="122" fill="#CBD5E1" font-family="Segoe UI, sans-serif" font-size="20">No lost context. No repeated explanations. Ready for the next teammate or AI agent.</text>
 
   <g filter="url(#shadow)">
     <rect x="70" y="170" width="490" height="460" rx="34" fill="url(#badCard)" stroke="#FB7185" stroke-opacity="0.35"/>
@@ -43,38 +43,38 @@
   <g>
     <rect x="105" y="205" width="64" height="64" rx="18" fill="#FB7185" opacity="0.15"/>
     <text x="122" y="251" fill="#FDA4AF" font-family="Segoe UI Emoji, Apple Color Emoji, sans-serif" font-size="34">✕</text>
-    <text x="190" y="232" fill="#FFE4E6" font-family="Segoe UI, sans-serif" font-size="28" font-weight="800">Tanpa RunbookAI</text>
-    <text x="190" y="260" fill="#FDA4AF" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">konteks rapuh, handoff berat</text>
+    <text x="190" y="232" fill="#FFE4E6" font-family="Segoe UI, sans-serif" font-size="28" font-weight="800">Without RunbookAI</text>
+    <text x="190" y="260" fill="#FDA4AF" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">fragile context, heavy handoff</text>
 
     <g font-family="Segoe UI, sans-serif" font-size="20" fill="#F8FAFC">
       <text x="115" y="330">• Chat reset = progress hilang</text>
-      <text x="115" y="380">• Error terkubur di terminal</text>
-      <text x="115" y="430">• Command history tercecer</text>
-      <text x="115" y="480">• Root cause harus diingat manual</text>
+      <text x="115" y="380">• Errors buried in terminal logs</text>
+      <text x="115" y="430">• Command history scattered</text>
+      <text x="115" y="480">• Root cause tracked manually</text>
       <text x="115" y="530">• Agent baru perlu briefing ulang</text>
     </g>
 
     <path d="M125 575 C210 545 310 610 430 570" stroke="#FB7185" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 12" opacity="0.75"/>
-    <text x="115" y="603" fill="#FDA4AF" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">Boros waktu + boros token</text>
+    <text x="115" y="603" fill="#FDA4AF" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">More time wasted + more tokens spent</text>
   </g>
 
   <g>
     <rect x="675" y="205" width="64" height="64" rx="18" fill="#2DD4BF" opacity="0.16"/>
     <text x="691" y="250" fill="#5EEAD4" font-family="Segoe UI Emoji, Apple Color Emoji, sans-serif" font-size="34">✓</text>
-    <text x="760" y="232" fill="#ECFDF5" font-family="Segoe UI, sans-serif" font-size="28" font-weight="800">Dengan RunbookAI</text>
-    <text x="760" y="260" fill="#86EFAC" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">engineering memory yang reusable</text>
+    <text x="760" y="232" fill="#ECFDF5" font-family="Segoe UI, sans-serif" font-size="28" font-weight="800">With RunbookAI</text>
+    <text x="760" y="260" fill="#86EFAC" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">reusable engineering memory</text>
 
     <g font-family="Segoe UI, sans-serif" font-size="20" fill="#F8FAFC">
-      <text x="685" y="330">• Commands &amp; exit code terekam</text>
-      <text x="685" y="380">• Error dan root cause tersummary</text>
-      <text x="685" y="430">• Changed files + diff tercatat</text>
-      <text x="685" y="480">• Runbook, changelog, PR note otomatis</text>
-      <text x="685" y="530">• Next-Agent Brief siap dipakai</text>
+      <text x="685" y="330">• Commands &amp; exit codes recorded</text>
+      <text x="685" y="380">• Errors and root cause summarized</text>
+      <text x="685" y="430">• Changed files + diffs captured</text>
+      <text x="685" y="480">• Runbooks, changelogs, PR notes</text>
+      <text x="685" y="530">• Next-Agent Brief ready to use</text>
     </g>
 
     <path d="M695 575 C780 545 895 545 1010 575" stroke="url(#accent)" stroke-width="5" stroke-linecap="round"/>
     <circle cx="1010" cy="575" r="8" fill="#A3E635"/>
-    <text x="685" y="603" fill="#A7F3D0" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">Lebih cepat, rapi, dan mudah dihandoff</text>
+    <text x="685" y="603" fill="#A7F3D0" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">Faster, cleaner, and easier to hand off</text>
   </g>
 
   <g>
