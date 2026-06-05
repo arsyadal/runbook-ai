@@ -20,19 +20,19 @@ impl AIService {
             Self {
                 provider: AIProvider::OpenAI,
                 api_key: Some(key),
-                model: env::var("RUNBOOKAI_MODEL").unwrap_or_else(|_| "gpt-4o".to_string()),
+                model: env::var("RUNBOOK_MODEL").unwrap_or_else(|_| "gpt-4o".to_string()),
             }
         } else if let Ok(key) = env::var("GEMINI_API_KEY") {
             Self {
                 provider: AIProvider::Gemini,
                 api_key: Some(key),
-                model: env::var("RUNBOOKAI_MODEL").unwrap_or_else(|_| "gemini-1.5-pro".to_string()),
+                model: env::var("RUNBOOK_MODEL").unwrap_or_else(|_| "gemini-1.5-pro".to_string()),
             }
         } else {
             Self {
                 provider: AIProvider::Ollama,
                 api_key: None,
-                model: env::var("RUNBOOKAI_MODEL").unwrap_or_else(|_| "llama3".to_string()),
+                model: env::var("RUNBOOK_MODEL").unwrap_or_else(|_| "llama3".to_string()),
             }
         }
     }

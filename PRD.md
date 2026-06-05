@@ -1,14 +1,14 @@
-# RunbookAI — Agent Runbook Recorder PRD
+# Runbook — Agent Runbook Recorder PRD
 
 ## 1. Product Summary
 
-RunbookAI is a local-first CLI developer tool that turns AI-assisted coding/debugging sessions into reusable engineering documentation: runbooks, changelog entries, postmortems, and next-agent briefs.
+Runbook is a local-first CLI developer tool that turns AI-assisted coding/debugging sessions into reusable engineering documentation: runbooks, changelog entries, postmortems, and next-agent briefs.
 
 It records the useful parts of a debugging/development session—commands, exit codes, errors, changed files, technical notes, root causes, and verification steps—then generates clean Markdown artifacts that can live inside the repository.
 
 **Core positioning:**
 
-> RunbookAI turns AI coding agent sessions into reusable runbooks, changelogs, and postmortems.
+> Runbook turns AI coding agent sessions into reusable runbooks, changelogs, and postmortems.
 
 **Core principle:**
 
@@ -39,18 +39,18 @@ This creates several problems:
 6. AI agents solve problems but do not create durable operational memory.
 7. **Token Exhaustion & The "Dreaded" Session Reset:** When an agent hits its token limit or "message cap" mid-task, developers hit a wall. Progress vanishes. Context is lost. Switching providers feels like starting from scratch.
 
-RunbookAI is your **Context Insurance**. It ensures that even if your AI agent dies or hits a limit, your work doesn't have to.
+Runbook is your **Context Insurance**. It ensures that even if your AI agent dies or hits a limit, your work doesn't have to.
 
 ## 3. Differentiation
 
 ### 3.1 Your Universal Context Bridge (No More "Start Over" Anxiety)
-RunbookAI is the ultimate solution for provider friction. Hit a limit in Claude? No problem. Generate a `Next-Agent Brief` and hand it to Cursor or Gemini. They'll pick up exactly where the last agent left off—no redundant commands, no repeated errors, and no wasted tokens.
+Runbook is the ultimate solution for provider friction. Hit a limit in Claude? No problem. Generate a `Next-Agent Brief` and hand it to Cursor or Gemini. They'll pick up exactly where the last agent left off—no redundant commands, no repeated errors, and no wasted tokens.
 
-**"Don't worry about your AI agent limit. RunbookAI has your back."**
+**"Don't worry about your AI agent limit. Runbook has your back."**
 
 ## 4. Goals
 
-RunbookAI aims to:
+Runbook aims to:
 
 1. Record AI-assisted debugging/development sessions.
 2. Capture commands, exit codes, durations, and useful output previews.
@@ -104,11 +104,11 @@ Bayu maintains an open-source project. PRs explain what changed, but not how the
 
 ### 7.1 In scope for v0.1
 
-RunbookAI v0.1 focuses on a local CLI workflow:
+Runbook v0.1 focuses on a local CLI workflow:
 
 1. Initialize project storage.
 2. Start and stop a recording session.
-3. Record wrapped commands via `runbookai exec`.
+3. Record wrapped commands via `runbook exec`.
 4. Capture command, exit code, duration, stdout/stderr preview.
 5. Detect common errors using rule-based patterns.
 6. Capture Git snapshots before and after the session.
@@ -143,7 +143,7 @@ The following are intentionally out of scope for MVP:
 Canonical binary name for the MVP:
 
 ```bash
-runbookai
+runbook
 ```
 
 Optional future alias:
@@ -155,7 +155,7 @@ rb
 ### 8.1 Init
 
 ```bash
-runbookai init
+runbook init
 ```
 
 Creates local config and storage.
@@ -163,29 +163,29 @@ Creates local config and storage.
 ### 8.2 Start session
 
 ```bash
-runbookai start "Fix login 401 error"
+runbook start "Fix login 401 error"
 ```
 
 Expected output:
 
 ```txt
-RunbookAI recording started.
+Runbook recording started.
 
 Session ID: rb_2026_05_29_001
 Project: my-app
 Branch: fix/login-error
 
-Run commands with: runbookai exec "<command>"
-Add notes with:   runbookai note --type decision "..."
-Stop with:        runbookai stop
+Run commands with: runbook exec "<command>"
+Add notes with:   runbook note --type decision "..."
+Stop with:        runbook stop
 ```
 
 ### 8.3 Execute and record command
 
 ```bash
-runbookai exec "npm test"
-runbookai exec "npm run build"
-runbookai exec "docker compose up -d"
+runbook exec "npm test"
+runbook exec "npm run build"
+runbook exec "docker compose up -d"
 ```
 
 Captured fields:
@@ -202,10 +202,10 @@ Captured fields:
 ### 8.4 Add notes
 
 ```bash
-runbookai note "Found issue in JWT validation."
-runbookai note --type root-cause "JWT secret was missing in test environment."
-runbookai note --type decision "Validate env during app bootstrap."
-runbookai note --type risk "Production env variables must not be renamed."
+runbook note "Found issue in JWT validation."
+runbook note --type root-cause "JWT secret was missing in test environment."
+runbook note --type decision "Validate env during app bootstrap."
+runbook note --type risk "Production env variables must not be renamed."
 ```
 
 Supported note types:
@@ -222,7 +222,7 @@ root-cause
 ### 8.5 Status
 
 ```bash
-runbookai status
+runbook status
 ```
 
 Displays active session summary.
@@ -230,13 +230,13 @@ Displays active session summary.
 ### 8.6 Stop session
 
 ```bash
-runbookai stop
+runbook stop
 ```
 
 Expected output:
 
 ```txt
-RunbookAI recording stopped.
+Runbook recording stopped.
 
 Session Summary:
 - Duration: 34 minutes
@@ -246,34 +246,34 @@ Session Summary:
 - Notes added: 4
 
 Generate documentation:
-- runbookai generate runbook
-- runbookai generate changelog
-- runbookai generate postmortem
-- runbookai generate all
+- runbook generate runbook
+- runbook generate changelog
+- runbook generate postmortem
+- runbook generate all
 ```
 
 ### 8.7 Generate documentation
 
 ```bash
-runbookai generate runbook
-runbookai generate changelog
-runbookai generate postmortem
-runbookai generate all
+runbook generate runbook
+runbook generate changelog
+runbook generate postmortem
+runbook generate all
 ```
 
 ### 8.8 Export
 
 ```bash
-runbookai export --format json
-runbookai export --format markdown
-runbookai export --output ./docs/runbooks/login-fix.md
+runbook export --format json
+runbook export --format markdown
+runbook export --output ./docs/runbooks/login-fix.md
 ```
 
 ## 9. Functional Requirements
 
 ### 9.1 Session management
 
-RunbookAI must:
+Runbook must:
 
 1. Create a session ID.
 2. Detect project root.
@@ -286,7 +286,7 @@ RunbookAI must:
 
 ### 9.2 Command recording
 
-RunbookAI must:
+Runbook must:
 
 1. Execute commands through a wrapper.
 2. Capture command string.
@@ -299,7 +299,7 @@ RunbookAI must:
 
 ### 9.3 Git change detection
 
-RunbookAI must:
+Runbook must:
 
 1. Capture Git snapshot before session.
 2. Capture Git snapshot after session.
@@ -340,7 +340,7 @@ Migration failed
 
 ### 9.5 Secret redaction
 
-RunbookAI must redact common secrets before writing logs:
+Runbook must redact common secrets before writing logs:
 
 ```txt
 API key
@@ -368,7 +368,7 @@ DATABASE_URL=[REDACTED]
 
 ### 9.6 Documentation generation
 
-RunbookAI must generate:
+Runbook must generate:
 
 1. `RUNBOOK.md` or `docs/runbooks/<session-slug>.md`.
 2. `CHANGELOG.generated.md`.
@@ -395,7 +395,7 @@ RunbookAI must generate:
 
 ### 10.3 Safety
 
-RunbookAI must not:
+Runbook must not:
 
 1. Run commands without explicit user action.
 2. Modify source code without permission.
@@ -416,7 +416,7 @@ Windows
 MVP command execution model:
 
 ```txt
-wrapped commands via runbookai exec
+wrapped commands via runbook exec
 ```
 
 Shell integration is future scope.
@@ -426,13 +426,13 @@ Shell integration is future scope.
 Default storage:
 
 ```txt
-.runbookai/
+.runbook/
 ```
 
 Structure:
 
 ```txt
-.runbookai/
+.runbook/
   config.json
   sessions/
     rb_2026_05_29_001/
@@ -661,16 +661,16 @@ type DetectedError = {
 
 ## 14. MVP Acceptance Criteria
 
-RunbookAI v0.1 is complete when a user can run:
+Runbook v0.1 is complete when a user can run:
 
 ```bash
-runbookai init
-runbookai start "Fix login 401 error"
-runbookai exec "npm test"
-runbookai note --type root-cause "JWT secret was missing in test environment."
-runbookai exec "npm run build"
-runbookai stop
-runbookai generate runbook
+runbook init
+runbook start "Fix login 401 error"
+runbook exec "npm test"
+runbook note --type root-cause "JWT secret was missing in test environment."
+runbook exec "npm run build"
+runbook stop
+runbook generate runbook
 ```
 
 And receive a Markdown runbook containing:
@@ -783,7 +783,7 @@ Features:
 ### 17.1 AI-assisted summary
 
 ```bash
-runbookai generate runbook --ai
+runbook generate runbook --ai
 ```
 
 Potential providers:
@@ -801,7 +801,7 @@ Default MVP must not require these providers.
 ### 17.2 MCP server
 
 ```bash
-runbookai mcp serve
+runbook mcp serve
 ```
 
 Use cases:
@@ -813,15 +813,15 @@ Use cases:
 ### 17.3 Searchable knowledge base
 
 ```bash
-runbookai search "login 401"
-runbookai search "database timeout"
-runbookai search "docker port already in use"
+runbook search "login 401"
+runbook search "database timeout"
+runbook search "docker port already in use"
 ```
 
 ### 17.4 GitHub PR integration
 
 ```bash
-runbookai generate pr
+runbook generate pr
 ```
 
 Output:
@@ -849,13 +849,13 @@ See: docs/runbooks/login-401-fix.md
 
 ## 18. Relationship With ContextLint
 
-RunbookAI can later become part of a broader ContextOps toolkit.
+Runbook can later become part of a broader ContextOps toolkit.
 
 Lifecycle:
 
 ```txt
 ContextLint  = before AI session: audit and clean context
-RunbookAI    = during/after AI session: preserve process as reusable knowledge
+Runbook    = during/after AI session: preserve process as reusable knowledge
 ```
 
 Workflow:
@@ -865,14 +865,14 @@ contextlint scan
 ↓
 AI coding agent session
 ↓
-runbookai record/generate
+runbook record/generate
 ↓
 runbook becomes future context
 ↓
 contextlint prevents memory/docs from becoming bloated
 ```
 
-Do not merge the tools during MVP. Keep RunbookAI focused on session-to-runbook conversion.
+Do not merge the tools during MVP. Keep Runbook focused on session-to-runbook conversion.
 
 ## 19. Metrics
 
@@ -939,7 +939,7 @@ Mitigation:
 
 ### 20.3 User workflow friction
 
-Users may not want to run commands through `runbookai exec`.
+Users may not want to run commands through `runbook exec`.
 
 Mitigation:
 
@@ -964,14 +964,14 @@ Mitigation:
 ### Week 1
 
 1. Set up Rust CLI project.
-2. Implement `runbookai init`.
-3. Implement `.runbookai` storage.
+2. Implement `runbook init`.
+3. Implement `.runbook` storage.
 4. Implement session ID generation.
 5. Implement `start`, `status`, and `stop`.
 
 ### Week 2
 
-1. Implement `runbookai exec`.
+1. Implement `runbook exec`.
 2. Capture command, exit code, duration.
 3. Capture stdout/stderr preview.
 4. Implement basic error detection.
@@ -981,7 +981,7 @@ Mitigation:
 
 1. Implement Git snapshot before/after.
 2. Detect changed files.
-3. Implement `runbookai note`.
+3. Implement `runbook note`.
 4. Store notes in session.
 5. Add JSON export.
 
@@ -999,16 +999,16 @@ Mitigation:
 ## 22. Example README Headline
 
 ```md
-# RunbookAI
+# Runbook
 
 Turn your AI coding agent sessions into reusable runbooks, changelogs, and postmortems.
 
-RunbookAI records commands, changed files, errors, and technical decisions during debugging, then generates clean documentation so your fix process never disappears in terminal history again.
+Runbook records commands, changed files, errors, and technical decisions during debugging, then generates clean documentation so your fix process never disappears in terminal history again.
 ```
 
 ## 23. Final MVP Definition
 
-RunbookAI v0.1 is a **session-to-runbook compiler** for AI-assisted development.
+Runbook v0.1 is a **session-to-runbook compiler** for AI-assisted development.
 
 It is done when a developer can record a real debugging session from start to finish and generate a useful Markdown runbook that explains:
 

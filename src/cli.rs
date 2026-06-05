@@ -3,7 +3,7 @@ use clap::{Parser, Subcommand, ValueEnum};
 use std::path::PathBuf;
 
 #[derive(Parser)]
-#[command(name = "runbookai")]
+#[command(name = "runbook")]
 #[command(about = "Turn AI coding agent sessions into reusable runbooks.")]
 #[command(version)]
 pub struct Cli {
@@ -13,7 +13,7 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Commands {
-    /// Initialize RunbookAI storage in the current project.
+    /// Initialize Runbook storage in the current project.
     Init,
     /// Start a new recording session.
     Start {
@@ -22,7 +22,7 @@ pub enum Commands {
     },
     /// Show active session status.
     Status,
-    /// Diagnose local RunbookAI setup and environment.
+    /// Diagnose local Runbook setup and environment.
     Doctor {
         /// Print machine-readable JSON output.
         #[arg(long)]

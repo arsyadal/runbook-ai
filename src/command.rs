@@ -14,7 +14,7 @@ use crate::util::preview;
 
 pub fn exec_command(command: &str) -> Result<()> {
     let id =
-        active_session_id().context("No active session. Run `runbookai start \"title\"` first.")?;
+        active_session_id().context("No active session. Run `runbook start \"title\"` first.")?;
     let mut session = load_session(&id)?;
     let config = load_config()?;
     let cwd = std::env::current_dir()?;
@@ -71,7 +71,7 @@ pub fn exec_command(command: &str) -> Result<()> {
 
 pub fn note(kind: crate::models::NoteKind, content_parts: Vec<String>) -> Result<()> {
     let id =
-        active_session_id().context("No active session. Run `runbookai start \"title\"` first.")?;
+        active_session_id().context("No active session. Run `runbook start \"title\"` first.")?;
     let mut session = load_session(&id)?;
     let content = content_parts.join(" ").trim().to_string();
     if content.is_empty() {

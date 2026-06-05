@@ -1,6 +1,6 @@
 <svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">Working without RunbookAI compared to working with RunbookAI</title>
-  <desc id="desc">A visual infographic comparing an AI coding agent workflow without automatic documentation against a workflow powered by RunbookAI.</desc>
+  <title id="title">Working without Runbook compared to working with Runbook</title>
+  <desc id="desc">A visual infographic comparing an AI coding agent workflow without automatic documentation against a workflow powered by Runbook.</desc>
   <defs>
     <radialGradient id="bgGlow" cx="50%" cy="10%" r="85%">
       <stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.26"/>
@@ -43,7 +43,7 @@
   <g>
     <rect x="105" y="205" width="64" height="64" rx="18" fill="#FB7185" opacity="0.15"/>
     <text x="122" y="251" fill="#FDA4AF" font-family="Segoe UI Emoji, Apple Color Emoji, sans-serif" font-size="34">✕</text>
-    <text x="190" y="232" fill="#FFE4E6" font-family="Segoe UI, sans-serif" font-size="28" font-weight="800">Without RunbookAI</text>
+    <text x="190" y="232" fill="#FFE4E6" font-family="Segoe UI, sans-serif" font-size="28" font-weight="800">Without Runbook</text>
     <text x="190" y="260" fill="#FDA4AF" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">fragile context, heavy handoff</text>
 
     <g font-family="Segoe UI, sans-serif" font-size="20" fill="#F8FAFC">
@@ -61,7 +61,7 @@
   <g>
     <rect x="675" y="205" width="64" height="64" rx="18" fill="#2DD4BF" opacity="0.16"/>
     <text x="691" y="250" fill="#5EEAD4" font-family="Segoe UI Emoji, Apple Color Emoji, sans-serif" font-size="34">✓</text>
-    <text x="760" y="232" fill="#ECFDF5" font-family="Segoe UI, sans-serif" font-size="28" font-weight="800">With RunbookAI</text>
+    <text x="760" y="232" fill="#ECFDF5" font-family="Segoe UI, sans-serif" font-size="28" font-weight="800">With Runbook</text>
     <text x="760" y="260" fill="#86EFAC" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">reusable engineering memory</text>
 
     <g font-family="Segoe UI, sans-serif" font-size="20" fill="#F8FAFC">
@@ -85,5 +85,5 @@
   </g>
 
   <rect x="80" y="660" width="1040" height="1" fill="#FFFFFF" opacity="0.12"/>
-  <text x="80" y="690" fill="#94A3B8" font-family="Segoe UI, sans-serif" font-size="16">RunbookAI — turn AI coding sessions into reusable runbooks, changelogs, postmortems, and next-agent briefs.</text>
+  <text x="80" y="690" fill="#94A3B8" font-family="Segoe UI, sans-serif" font-size="16">Runbook — turn AI coding sessions into reusable runbooks, changelogs, postmortems, and next-agent briefs.</text>
 </svg>

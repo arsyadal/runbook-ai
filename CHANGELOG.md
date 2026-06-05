@@ -1,21 +1,27 @@
 # Changelog
 
-All notable changes in RunbookAI, from the first commit to the latest update.
+All notable changes in Runbook, from the first commit to the latest update.
 
 ## Unreleased
 
+### Breaking changes
+- Renamed the product and CLI from `RunbookAI` / `runbookai` to `Runbook` / `runbook`.
+- Renamed local storage from `.runbookai/` to `.runbook/`.
+- Renamed environment override prefix from `RUNBOOKAI_` to `RUNBOOK_`.
+
 ### Documentation
+- Updated install instructions for the new `runbook` binary.
 - Added a polished static landing page and documentation page under `docs/`.
 - Added enhanced navigation polish: active states, mobile menu, scroll progress, external-link CTA, copyable install command, and stronger brand mark.
 - Added third-party tool logos to the landing page with a trademark disclaimer.
 - Added a short animated product demo GIF, MP4 video, and poster image to the README.
-- Added real-world use cases to the README to make RunbookAI's practical value clearer.
+- Added real-world use cases to the README to make Runbook's practical value clearer.
 - Covered production incidents, AI-agent handoff, provider switching, PR descriptions, team knowledge, and risky-change audits.
 
 ## 2026-06-05
 
 ### `9d9d9bf` — docs: add visual comparison assets
-- Added visual comparison assets for RunbookAI:
+- Added visual comparison assets for Runbook:
   - `docs/assets/runbook-comparison.svg`
   - `docs/assets/runbook-comparison.png`
   - `docs/assets/runbook-comparison.jpg`
@@ -24,7 +30,7 @@ All notable changes in RunbookAI, from the first commit to the latest update.
 - Added README links to the PNG, JPG, and MP4 assets.
 
 ### `2d52503` — docs: add runbook comparison
-- Added a README comparison table showing the difference between using RunbookAI and working without RunbookAI.
+- Added a README comparison table showing the difference between using Runbook and working without Runbook.
 - Covered session continuity, command history, error tracking, changed files, root cause capture, AI-agent handoff, team documentation, and token savings.
 
 ## 2026-06-03
@@ -53,7 +59,7 @@ All notable changes in RunbookAI, from the first commit to the latest update.
 - Updated the README, CLI, doctor module, and integration tests.
 
 ### `0c8a100` — feat: add doctor command
-- Added the `runbookai doctor` command for local environment diagnostics.
+- Added the `runbook doctor` command for local environment diagnostics.
 - Added JSON output support for the doctor command.
 - Added integration tests for doctor functionality.
 
@@ -64,7 +70,7 @@ All notable changes in RunbookAI, from the first commit to the latest update.
 ## 2026-06-02
 
 ### `ba597e4` — feat: implement GitHub PR Description Generator (Phase 4)
-- Added the `runbookai generate pr` command.
+- Added the `runbook generate pr` command.
 - Added a default PR description template with Summary, Changes, and Verification sections.
 - Integrated session notes such as Decisions and Risks into the PR template.
 - Updated the README and integration tests.
@@ -77,20 +83,20 @@ All notable changes in RunbookAI, from the first commit to the latest update.
 
 ### `a0635ee` — feat: implement MCP Server support (Phase 3)
 - Added an MCP module implementing JSON-RPC over stdio.
-- Added the `runbookai mcp serve` command.
+- Added the `runbook mcp serve` command.
 - Exposed `search_sessions` as an MCP tool.
 - Exposed session data as MCP resources using `runbook://sessions/<id>`.
 - Added a Claude Desktop configuration example to the README.
 
 ### `ad654ce` — marketing: reposition as Context Insurance for AI token limits
-- Repositioned RunbookAI as “Context Insurance”.
+- Repositioned Runbook as “Context Insurance”.
 - Strengthened the “Universal Context Bridge” message for switching AI providers.
 - Updated the PRD, README, and Next-Agent Brief template.
 - Clarified messaging around context loss when an AI agent reaches its limit.
 
 ### `7643609` — docs: update PRD to address token limits and context loss
 - Added problem-statement coverage for token exhaustion and session fragmentation.
-- Described RunbookAI as a Universal Context Bridge.
+- Described Runbook as a Universal Context Bridge.
 - Added the high-fidelity Next-Agent Brief as a core product goal.
 
 ### `dc61743` — feat: implement AI-Assisted Summaries (Phase 3)
@@ -124,4 +130,4 @@ All notable changes in RunbookAI, from the first commit to the latest update.
 
 ### `df2af10` — first commit
 - Initial project commit.
-- Added the first README as the documentation foundation for RunbookAI.
+- Added the first README as the documentation foundation for Runbook.

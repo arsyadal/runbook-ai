@@ -52,55 +52,55 @@ fn print_shell_hook(shell: &str) -> Result<()> {
     match shell {
         "zsh" => {
             println!(
-                r#"# RunbookAI Zsh Integration
-_runbookai_preexec() {{
+                r#"# Runbook Zsh Integration
+_runbook_preexec() {{
     export _RB_START_TIME=$(date +%s%3N)
     export _RB_LAST_CMD="$1"
 }}
-_runbookai_precmd() {{
+_runbook_precmd() {{
     local exit_code=$?
     if [ -n "$_RB_LAST_CMD" ]; then
         local end_time=$(date +%s%3N)
         local duration=$((end_time - _RB_START_TIME))
         # Headless record in background
-        runbookai record --command "$_RB_LAST_CMD" --exit-code $exit_code --duration $duration > /dev/null 2>&1 &!
+        runbook record --command "$_RB_LAST_CMD" --exit-code $exit_code --duration $duration > /dev/null 2>&1 &!
         unset _RB_LAST_CMD
     fi
 }}
 autoload -Uz add-zsh-hook
-add-zsh-hook preexec _runbookai_preexec
-add-zsh-hook precmd _runbookai_precmd
+add-zsh-hook preexec _runbook_preexec
+add-zsh-hook precmd _runbook_precmd
 "#
             );
         }
         "bash" => {
             println!(
-                r#"# RunbookAI Bash Integration
-_runbookai_bash_hook() {{
+                r#"# Runbook Bash Integration
+_runbook_bash_hook() {{
     local exit_code=$?
     if [ -n "$_RB_LAST_CMD" ]; then
         local end_time=$(date +%s%3N)
         local duration=$((end_time - _RB_START_TIME))
-        runbookai record --command "$_RB_LAST_CMD" --exit-code $exit_code --duration $duration > /dev/null 2>&1 &
+        runbook record --command "$_RB_LAST_CMD" --exit-code $exit_code --duration $duration > /dev/null 2>&1 &
         unset _RB_LAST_CMD
     fi
 }}
 trap 'export _RB_START_TIME=$(date +%s%3N); export _RB_LAST_CMD="$BASH_COMMAND"' DEBUG
-PROMPT_COMMAND="_runbookai_bash_hook; $PROMPT_COMMAND"
+PROMPT_COMMAND="_runbook_bash_hook; $PROMPT_COMMAND"
 "#
             );
         }
         "powershell" | "pwsh" => {
             println!(
-                r#"# RunbookAI PowerShell Integration
-$global:RunbookAILastHistoryId = $null
+                r#"# Runbook PowerShell Integration
+$global:RunbookLastHistoryId = $null
 
 function global:prompt {{
     $exitCode = if ($LASTEXITCODE -eq $null) {{ 0 }} else {{ $LASTEXITCODE }}
     $history = Get-History -Count 1
-    if ($history -and $history.Id -ne $global:RunbookAILastHistoryId) {{
-        $global:RunbookAILastHistoryId = $history.Id
-        Start-Process runbookai -ArgumentList @(
+    if ($history -and $history.Id -ne $global:RunbookLastHistoryId) {{
+        $global:RunbookLastHistoryId = $history.Id
+        Start-Process runbook -ArgumentList @(
             'record',
             '--command', $history.CommandLine,
             '--exit-code', $exitCode,
@@ -124,10 +124,10 @@ function global:prompt {{
 
 fn print_aliases() -> Result<()> {
     println!("# Add this to your .bashrc or .zshrc:");
-    println!("alias rb='runbookai'");
-    println!("alias rbx='runbookai exec'");
-    println!("alias rbn='runbookai note'");
-    println!("alias rbs='runbookai status'");
+    println!("alias rb='runbook'");
+    println!("alias rbx='runbook exec'");
+    println!("alias rbn='runbook note'");
+    println!("alias rbs='runbook status'");
     Ok(())
 }
 

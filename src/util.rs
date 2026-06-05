@@ -3,8 +3,8 @@ use serde::Serialize;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-pub const STORAGE_DIR: &str = ".runbookai";
-pub const ACTIVE_SESSION_FILE: &str = ".runbookai/active_session";
+pub const STORAGE_DIR: &str = ".runbook";
+pub const ACTIVE_SESSION_FILE: &str = ".runbook/active_session";
 
 pub fn write_json<T: Serialize>(path: &Path, value: &T) -> Result<()> {
     if let Some(parent) = path.parent() {

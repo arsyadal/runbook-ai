@@ -1470,7 +1470,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "runbookai"
+name = "runbook"
 version = "0.1.0"
 dependencies = [
  "anyhow",

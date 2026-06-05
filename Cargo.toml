@@ -1,5 +1,5 @@
 [package]
-name = "runbookai"
+name = "runbook"
 version = "0.1.0"
 edition = "2021"
 description = "Turn AI coding agent sessions into reusable runbooks, changelogs, and postmortems."
@@ -7,7 +7,7 @@ license = "MIT"
 repository = "https://github.com/arsyadal/runbook-ai"
 
 [[bin]]
-name = "runbookai"
+name = "runbook"
 path = "src/main.rs"
 
 [dependencies]

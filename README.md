@@ -1,16 +1,16 @@
-# RunbookAI
+# Runbook
 
 Turn your AI coding agent sessions into reusable runbooks, changelogs, and postmortems.
 
-> **Don't worry about your AI agent's limit. RunbookAI has your back.**
+> **Don't worry about your AI agent's limit. Runbook has your back.**
 
-RunbookAI is your **Context Insurance**. It records commands, changed files, errors, and technical decisions during debugging, then generates clean documentation so your progress never vanishes—even if your AI agent hits a token limit or you need to switch providers mid-session.
+Runbook is your **Context Insurance**. It records commands, changed files, errors, and technical decisions during debugging, then generates clean documentation so your progress never vanishes—even if your AI agent hits a token limit or you need to switch providers mid-session.
 
 ## The "Dreaded" Session Reset is Over
 
 Ever hit a "message cap" mid-debugging? Switching from Claude to Cursor and having to explain everything again? 
 
-RunbookAI acts as your **Universal Context Bridge**. Generate a `Next-Agent Brief` and give it to your next AI provider. They'll pick up exactly where you left off, saving you time, tokens, and sanity.
+Runbook acts as your **Universal Context Bridge**. Generate a `Next-Agent Brief` and give it to your next AI provider. They'll pick up exactly where you left off, saving you time, tokens, and sanity.
 
 > Not session memory. Engineering memory.
 
@@ -25,21 +25,21 @@ AI coding tools like Claude Code, Cursor, Codex, Gemini CLI, OpenCode, pi, and C
 - what root cause was found,
 - how the fix was verified.
 
-RunbookAI converts that process into repo-friendly Markdown documentation.
+Runbook converts that process into repo-friendly Markdown documentation.
 
 ## Short Demo Video
 
-![RunbookAI short demo video](docs/assets/runbook-demo.gif)
+![Runbook short demo video](docs/assets/runbook-demo.gif)
 
 Watch or download the MP4 version: [runbook-demo.mp4](docs/assets/runbook-demo.mp4)
 
-## Comparison: With RunbookAI vs Without RunbookAI
+## Comparison: With Runbook vs Without Runbook
 
-![Visual comparison: without RunbookAI vs with RunbookAI](docs/assets/runbook-comparison.svg)
+![Visual comparison: without Runbook vs with Runbook](docs/assets/runbook-comparison.svg)
 
 Media assets: [PNG](docs/assets/runbook-comparison.png) · [JPG](docs/assets/runbook-comparison.jpg) · [MP4](docs/assets/runbook-comparison.mp4)
 
-| Area | Without RunbookAI | With RunbookAI |
+| Area | Without Runbook | With Runbook |
 | --- | --- | --- |
 | Session continuity | Context is trapped in one chat and can be lost after reset, limit, or provider switch. | Work is captured as durable Markdown and can be handed to any future agent or teammate. |
 | Command history | Commands must be remembered manually or searched from shell history. | Commands, exit codes, duration, and optional output are recorded during the session. |
@@ -56,7 +56,7 @@ Media assets: [PNG](docs/assets/runbook-comparison.png) · [JPG](docs/assets/run
 
 A payment endpoint starts returning `500` errors. During the fix, you run database checks, inspect logs, test patches, and discover the root cause.
 
-With RunbookAI, the entire investigation becomes a postmortem-ready record:
+With Runbook, the entire investigation becomes a postmortem-ready record:
 
 - commands executed,
 - failed attempts,
@@ -72,21 +72,21 @@ Instead of writing an incident report from memory, you generate one from the act
 
 You are halfway through fixing a bug when your AI coding agent reaches a message cap or context limit.
 
-Without RunbookAI, the next agent needs a long explanation of what happened.
+Without Runbook, the next agent needs a long explanation of what happened.
 
-With RunbookAI, you generate a Next-Agent Brief containing what was tried, what failed, what changed, and what still needs to be done. The next AI agent can continue from the current state instead of starting over.
+With Runbook, you generate a Next-Agent Brief containing what was tried, what failed, what changed, and what still needs to be done. The next AI agent can continue from the current state instead of starting over.
 
 ### 3. Switching between Claude, Cursor, Codex, Gemini CLI, or Copilot
 
 Different AI tools are good at different tasks. You might debug with Claude, refactor in Cursor, and verify with Codex.
 
-RunbookAI acts as a shared context layer across tools. The repo contains the engineering memory, so the workflow is not locked inside one provider's chat history.
+Runbook acts as a shared context layer across tools. The repo contains the engineering memory, so the workflow is not locked inside one provider's chat history.
 
 ### 4. Preparing a pull request description
 
 After a long coding session, it is easy to forget why each file changed.
 
-RunbookAI can turn the session into a PR summary with:
+Runbook can turn the session into a PR summary with:
 
 - what changed,
 - why it changed,
@@ -99,13 +99,13 @@ This makes PRs easier to review and reduces back-and-forth with teammates.
 
 Some bugs come back months later. If the original fix only lives in a chat session, the team has to rediscover the same context.
 
-RunbookAI stores the fix process as repo-friendly Markdown. Future developers and future AI agents can search old sessions, understand past decisions, and avoid repeating the same investigation.
+Runbook stores the fix process as repo-friendly Markdown. Future developers and future AI agents can search old sessions, understand past decisions, and avoid repeating the same investigation.
 
 ### 6. Auditing risky changes
 
 For infrastructure, auth, payments, migrations, or production fixes, the process matters as much as the final diff.
 
-RunbookAI records the operational trail: commands, environment checks, errors, decisions, risks, and verification. That makes risky work easier to review, explain, and recover from.
+Runbook records the operational trail: commands, environment checks, errors, decisions, risks, and verification. That makes risky work easier to review, explain, and recover from.
 
 ## Status
 
@@ -124,9 +124,9 @@ Implemented:
 - Session search: `search "<query>"`
 - Shell helpers: `alias`, `shell-hook`
 - MCP server: `mcp serve`
-- Custom Handlebars templates (`.runbookai/templates/`)
+- Custom Handlebars templates (`.runbook/templates/`)
 - Enhanced Git diff capture with redaction
-- Local `.runbookai/` storage
+- Local `.runbook/` storage
 - Git changed-file detection
 - Basic error detection
 - Basic secret redaction
@@ -135,35 +135,35 @@ Implemented:
 
 ## Shell Integration (No More `exec`)
 
-If you don't want to type `runbookai exec` for every command, you can integrate RunbookAI directly into your shell. This will automatically record every command you run whenever a session is active.
+If you don't want to type `runbook exec` for every command, you can integrate Runbook directly into your shell. This will automatically record every command you run whenever a session is active.
 
 Add this to your `.zshrc`, `.bashrc`, or PowerShell profile:
 
 ```bash
 # For Zsh
-source <(runbookai shell-hook zsh)
+source <(runbook shell-hook zsh)
 
 # For Bash
-source <(runbookai shell-hook bash)
+source <(runbook shell-hook bash)
 ```
 
 ```powershell
 # For PowerShell
-runbookai shell-hook powershell | Invoke-Expression
+runbook shell-hook powershell | Invoke-Expression
 ```
 
-Now, simply running `runbookai start "title"` is enough. Every subsequent command in that shell will be recorded automatically until you run `runbookai stop`.
+Now, simply running `runbook start "title"` is enough. Every subsequent command in that shell will be recorded automatically until you run `runbook stop`.
 
-*Note: Zsh/Bash shell integration captures command strings, exit codes, and duration. PowerShell shell integration captures command strings and exit codes with duration set to `0`. For full output and error capture, `runbookai exec` is still recommended.*
+*Note: Zsh/Bash shell integration captures command strings, exit codes, and duration. PowerShell shell integration captures command strings and exit codes with duration set to `0`. For full output and error capture, `runbook exec` is still recommended.*
 
 ## AI Provider Configuration
 
-RunbookAI can generate AI-assisted summaries with:
+Runbook can generate AI-assisted summaries with:
 
 ```bash
-runbookai generate runbook --ai
-runbookai generate pr --ai
-runbookai generate all --ai
+runbook generate runbook --ai
+runbook generate pr --ai
+runbook generate all --ai
 ```
 
 Provider selection is environment-based:
@@ -175,20 +175,20 @@ Provider selection is environment-based:
 Override the model with:
 
 ```bash
-RUNBOOKAI_MODEL=llama3.1 runbookai generate runbook --ai
+RUNBOOK_MODEL=llama3.1 runbook generate runbook --ai
 ```
 
 ## MCP Server Support
 
-RunbookAI supports the **Model Context Protocol (MCP)**. This allows AI agents (like Claude Desktop or Cursor) to directly query your previous sessions.
+Runbook supports the **Model Context Protocol (MCP)**. This allows AI agents (like Claude Desktop or Cursor) to directly query your previous sessions.
 
 To use it with Claude Desktop, add this to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
-    "runbookai": {
-      "command": "runbookai",
+    "runbook": {
+      "command": "runbook",
       "args": ["mcp", "serve"]
     }
   }
@@ -199,11 +199,27 @@ Capabilities:
 - **Tools:** `search_sessions` (search through old sessions).
 - **Resources:** `runbook://sessions/<id>` (read full session data as JSON).
 
-## Install from source
+## Install
+
+Install from this repository:
+
+```bash
+cargo install --git https://github.com/arsyadal/runbook-ai
+```
+
+Or install from a local checkout:
 
 ```bash
 cargo install --path .
 ```
+
+This installs the CLI as:
+
+```bash
+runbook --help
+```
+
+> Note: the `runbook` crate name is already taken on crates.io. The binary is now `runbook`, but publishing as `cargo install runbook` requires an available crates.io package name or ownership of that crate.
 
 Or run directly:
 
@@ -243,53 +259,53 @@ If Git Bash resolves `link.exe` to `C:\Program Files\Git\usr\bin\link.exe`, the 
 Initialize storage:
 
 ```bash
-runbookai init
+runbook init
 ```
 
 Start a session:
 
 ```bash
-runbookai start "Fix login 401 error"
+runbook start "Fix login 401 error"
 ```
 
-Run commands through RunbookAI:
+Run commands through Runbook:
 
 ```bash
-runbookai exec "npm test"
-runbookai exec "npm run build"
+runbook exec "npm test"
+runbook exec "npm run build"
 ```
 
 Add notes:
 
 ```bash
-runbookai note --type root-cause "JWT secret was missing in test environment."
-runbookai note --type decision "Validate env during app bootstrap."
-runbookai note --type risk "Production env variables must not be renamed."
+runbook note --type root-cause "JWT secret was missing in test environment."
+runbook note --type decision "Validate env during app bootstrap."
+runbook note --type risk "Production env variables must not be renamed."
 ```
 
 Check status:
 
 ```bash
-runbookai status
+runbook status
 ```
 
 Diagnose your local setup:
 
 ```bash
-runbookai doctor
-runbookai doctor --json
+runbook doctor
+runbook doctor --json
 ```
 
 Stop recording:
 
 ```bash
-runbookai stop
+runbook stop
 ```
 
 Generate docs:
 
 ```bash
-runbookai generate all
+runbook generate all
 ```
 
 Generated files are written to:
@@ -301,7 +317,7 @@ docs/runbooks/
 Session data is stored locally in:
 
 ```txt
-.runbookai/
+.runbook/
 ```
 
 ## Project Structure
@@ -326,14 +342,14 @@ src/
 ## Example workflow
 
 ```bash
-runbookai init
-runbookai start "Fix auth test failure"
-runbookai exec "npm test"
-runbookai note --type finding "Login test fails with 401 for valid credentials."
-runbookai note --type root-cause "JWT secret is missing in the test environment."
-runbookai exec "npm run build"
-runbookai stop
-runbookai generate runbook
+runbook init
+runbook start "Fix auth test failure"
+runbook exec "npm test"
+runbook note --type finding "Login test fails with 401 for valid credentials."
+runbook note --type root-cause "JWT secret is missing in the test environment."
+runbook exec "npm run build"
+runbook stop
+runbook generate runbook
 ```
 
 Example output:
@@ -358,12 +374,12 @@ The generated runbook includes:
 
 `/resume` and session history help continue a conversation inside one AI tool.
 
-RunbookAI creates durable engineering artifacts that live in your repo and can be read by humans, teammates, and future agents.
+Runbook creates durable engineering artifacts that live in your repo and can be read by humans, teammates, and future agents.
 
 ## Relationship with ContextLint
 
 - ContextLint = before AI session: audit and clean project context.
-- RunbookAI = during/after AI session: preserve the fix process as reusable knowledge.
+- Runbook = during/after AI session: preserve the fix process as reusable knowledge.
 
 They are separate tools but can become part of a broader ContextOps workflow later.
 

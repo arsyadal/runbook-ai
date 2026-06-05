@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunbookAI — Context Insurance for AI Coding Agents</title>
-  <meta name="description" content="RunbookAI turns AI coding sessions into reusable runbooks, changelogs, PR notes, postmortems, and next-agent briefs." />
-  <meta property="og:title" content="RunbookAI — Never lose your AI coding context again" />
+  <title>Runbook — Context Insurance for AI Coding Agents</title>
+  <meta name="description" content="Runbook turns AI coding sessions into reusable runbooks, changelogs, PR notes, postmortems, and next-agent briefs." />
+  <meta property="og:title" content="Runbook — Never lose your AI coding context again" />
   <meta property="og:description" content="Capture commands, errors, changed files, decisions, and root causes while you work with AI coding agents." />
   <meta property="og:image" content="assets/runbook-demo-poster.png" />
   <style>
@@ -400,11 +400,11 @@
   <nav class="nav" id="site-nav">
     <div class="scroll-progress" id="scroll-progress"></div>
     <div class="container nav-inner">
-      <a class="brand" href="#top" aria-label="RunbookAI home">
+      <a class="brand" href="#top" aria-label="Runbook home">
         <span class="mark">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 6.5h7l2 2h5v9.5H5V6.5Z" stroke="#A7F3D0" stroke-width="1.8"/><path d="M8.2 13.2l2 1.8-2 1.8M12.5 16.8h3.4" stroke="#A7F3D0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
-        RunbookAI
+        Runbook
       </a>
       <div class="nav-links" data-scrollspy>
         <a href="#use-cases">Use cases</a>
@@ -413,7 +413,7 @@
         <a href="#quickstart">Quickstart</a>
       </div>
       <div class="nav-actions">
-        <div class="nav-command"><span>cargo install --path .</span><button class="copy-mini" type="button" data-copy="cargo install --path .">Copy</button></div>
+        <div class="nav-command"><span>cargo install --git https://github.com/arsyadal/runbook-ai</span><button class="copy-mini" type="button" data-copy="cargo install --git https://github.com/arsyadal/runbook-ai">Copy</button></div>
         <a class="btn" href="docs.html">Docs</a>
         <a class="btn btn-primary" href="https://github.com/arsyadal/runbook-ai" target="_blank" rel="noreferrer">Star on GitHub ↗</a>
       </div>
@@ -435,15 +435,15 @@
         <div>
           <div class="eyebrow"><span class="pulse"></span> Context insurance for AI coding agents</div>
           <h1><span class="gradient-text">Never lose your AI coding context again.</span></h1>
-          <p class="hero-copy">RunbookAI captures commands, errors, changed files, decisions, and root causes, then turns every AI coding session into reusable runbooks, changelogs, PR notes, postmortems, and next-agent briefs.</p>
+          <p class="hero-copy">Runbook captures commands, errors, changed files, decisions, and root causes, then turns every AI coding session into reusable runbooks, changelogs, PR notes, postmortems, and next-agent briefs.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#quickstart">Get started</a>
             <a class="btn" href="assets/runbook-demo.mp4">Watch demo</a>
           </div>
-          <div class="terminal-line">$ runbookai start "Fix payment 500"</div>
+          <div class="terminal-line">$ runbook start "Fix payment 500"</div>
         </div>
         <div class="hero-visual">
-          <img src="assets/runbook-demo.gif" alt="Animated RunbookAI demo showing a session turning into reusable documents" />
+          <img src="assets/runbook-demo.gif" alt="Animated Runbook demo showing a session turning into reusable documents" />
           <div class="float-card"><strong>One session. Many artifacts.</strong><span>Generate a runbook, changelog, PR summary, postmortem, and next-agent brief from the same captured work.</span></div>
         </div>
       </div>
@@ -454,7 +454,7 @@
         <strong>Works alongside the AI coding tools you already use</strong>
         <span class="trademark-note">Logos are trademarks of their respective owners. No affiliation or endorsement implied.</span>
       </div>
-      <div class="strip-box" aria-label="AI coding tools RunbookAI can work alongside">
+      <div class="strip-box" aria-label="AI coding tools Runbook can work alongside">
         <span class="tool-logo"><img class="brand-logo" src="assets/logos/claude-code.svg" alt="Claude Code logo">Claude Code</span>
         <span class="tool-logo"><img class="brand-logo" src="assets/logos/cursor.svg" alt="Cursor logo">Cursor</span>
         <span class="tool-logo"><img class="brand-logo wordmark" src="assets/logos/openai.svg" alt="OpenAI logo">Codex</span>
@@ -469,7 +469,7 @@
       <div class="container">
         <div class="section-head">
           <h2>Built for the messy middle of AI-assisted engineering.</h2>
-          <p class="section-desc">The final diff does not explain the investigation. RunbookAI preserves the trail that normally disappears into chat history and terminal scrollback.</p>
+          <p class="section-desc">The final diff does not explain the investigation. Runbook preserves the trail that normally disappears into chat history and terminal scrollback.</p>
         </div>
         <div class="cards">
           <article class="card"><div class="icon">01</div><h3>Agent handoff</h3><p>When a model hits a context limit, generate a Next-Agent Brief so the next AI tool can continue without a long re-explanation.</p></article>
@@ -483,18 +483,18 @@
       <div class="container">
         <div class="section-head">
           <h2>Record the work. Generate the memory.</h2>
-          <p class="section-desc">RunbookAI sits alongside your existing tools. Keep using your terminal and AI agent; RunbookAI turns the session into durable engineering artifacts.</p>
+          <p class="section-desc">Runbook sits alongside your existing tools. Keep using your terminal and AI agent; Runbook turns the session into durable engineering artifacts.</p>
         </div>
         <div class="flow">
           <div class="panel panel-pad">
             <div class="mini-terminal">
-              <div>$ runbookai start "Fix login 401"</div>
-              <div>$ runbookai exec "npm test"</div>
+              <div>$ runbook start "Fix login 401"</div>
+              <div>$ runbook exec "npm test"</div>
               <div class="fail">✕ Auth test failed: missing JWT secret</div>
-              <div>$ runbookai note --type root-cause "test env missing JWT_SECRET"</div>
-              <div>$ runbookai exec "npm run build"</div>
+              <div>$ runbook note --type root-cause "test env missing JWT_SECRET"</div>
+              <div>$ runbook exec "npm run build"</div>
               <div class="ok">✓ build passed</div>
-              <div>$ runbookai generate all</div>
+              <div>$ runbook generate all</div>
             </div>
           </div>
           <div class="panel panel-pad">
@@ -512,10 +512,10 @@
     <section id="comparison" class="section">
       <div class="container">
         <div class="section-head">
-          <h2>Without RunbookAI, context is fragile.</h2>
-          <p class="section-desc">With RunbookAI, the repo becomes the source of truth for what happened during an AI-assisted coding session.</p>
+          <h2>Without Runbook, context is fragile.</h2>
+          <p class="section-desc">With Runbook, the repo becomes the source of truth for what happened during an AI-assisted coding session.</p>
         </div>
-        <img class="comparison-img" src="assets/runbook-comparison.svg" alt="Comparison between working without RunbookAI and with RunbookAI" />
+        <img class="comparison-img" src="assets/runbook-comparison.svg" alt="Comparison between working without Runbook and with Runbook" />
       </div>
     </section>
 
@@ -526,12 +526,12 @@
           <h2 style="margin:18px 0 14px;font-size:clamp(34px,5vw,58px);line-height:.98;letter-spacing:-.055em;">Start preserving your next debugging session.</h2>
           <p class="section-desc">Install from source, start a session, run commands, add notes, and generate reusable documentation.</p>
         </div>
-        <pre><code>cargo install --path .
-runbookai init
-runbookai start "Fix payment 500"
-runbookai exec "npm test"
-runbookai note --type root-cause "JWT secret missing"
-runbookai generate all</code></pre>
+        <pre><code>cargo install --git https://github.com/arsyadal/runbook-ai
+runbook init
+runbook start "Fix payment 500"
+runbook exec "npm test"
+runbook note --type root-cause "JWT secret missing"
+runbook generate all</code></pre>
       </div>
     </section>
 
@@ -549,7 +549,7 @@ runbookai generate all</code></pre>
 
   <footer>
     <div class="container footer-inner">
-      <span>© 2026 RunbookAI</span>
+      <span>© 2026 Runbook</span>
       <span>Context insurance for AI coding agents.</span>
     </div>
   </footer>

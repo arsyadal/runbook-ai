@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunbookAI Docs — Quickstart and Commands</title>
-  <meta name="description" content="Documentation for RunbookAI: install, quickstart, commands, shell integration, AI summaries, and MCP server setup." />
+  <title>Runbook Docs — Quickstart and Commands</title>
+  <meta name="description" content="Documentation for Runbook: install, quickstart, commands, shell integration, AI summaries, and MCP server setup." />
   <style>
     :root{--bg:#020617;--surface:rgba(15,23,42,.76);--surface2:rgba(8,17,31,.9);--line:rgba(148,163,184,.18);--text:#f8fafc;--muted:#94a3b8;--soft:#cbd5e1;--teal:#2dd4bf;--lime:#a3e635;--sky:#38bdf8;--amber:#fbbf24;--rose:#fb7185;--radius:26px;--shadow:0 30px 90px rgba(0,0,0,.38)}
     *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;color:var(--text);background:radial-gradient(circle at 50% -10%,rgba(45,212,191,.22),transparent 34rem),radial-gradient(circle at 90% 0,rgba(163,230,53,.1),transparent 28rem),var(--bg);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-.01em} body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(to bottom,#000,transparent 80%)}
@@ -13,57 +13,57 @@
   </style>
 </head>
 <body>
-  <nav class="nav" id="site-nav"><div class="scroll-progress" id="scroll-progress"></div><div class="container nav-inner"><a class="brand" href="index.html"><span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M5 6.5h7l2 2h5v9.5H5V6.5Z" stroke="#A7F3D0" stroke-width="1.8"/><path d="M8.2 13.2l2 1.8-2 1.8M12.5 16.8h3.4" stroke="#A7F3D0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>RunbookAI</a><div class="nav-links" data-scrollspy><a href="index.html">Home</a><a href="#quickstart">Quickstart</a><a href="#commands">Commands</a><a href="#mcp">MCP</a><a href="#templates">Templates</a></div><div class="nav-actions"><div class="nav-command"><span>cargo install --path .</span><button class="copy-mini" type="button" data-copy="cargo install --path .">Copy</button></div><a class="btn btn-primary" href="https://github.com/arsyadal/runbook-ai" target="_blank" rel="noreferrer">Star on GitHub ↗</a></div><button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">☰</button></div><div class="mobile-menu" id="mobile-menu"><a href="index.html">Home</a><a href="#quickstart">Quickstart</a><a href="#commands">Commands</a><a href="#mcp">MCP</a><a href="#templates">Templates</a><a href="https://github.com/arsyadal/runbook-ai" target="_blank" rel="noreferrer">Star on GitHub ↗</a></div></nav>
-  <header class="hero"><div class="container"><div class="eyebrow"><span class="pulse"></span> Documentation</div><h1><span class="gradient">RunbookAI docs for fast setup and daily use.</span></h1><p class="lead">Install RunbookAI, capture your AI-assisted debugging session, and generate durable engineering artifacts that survive chat resets, provider switches, and handoffs.</p></div></header>
+  <nav class="nav" id="site-nav"><div class="scroll-progress" id="scroll-progress"></div><div class="container nav-inner"><a class="brand" href="index.html"><span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M5 6.5h7l2 2h5v9.5H5V6.5Z" stroke="#A7F3D0" stroke-width="1.8"/><path d="M8.2 13.2l2 1.8-2 1.8M12.5 16.8h3.4" stroke="#A7F3D0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Runbook</a><div class="nav-links" data-scrollspy><a href="index.html">Home</a><a href="#quickstart">Quickstart</a><a href="#commands">Commands</a><a href="#mcp">MCP</a><a href="#templates">Templates</a></div><div class="nav-actions"><div class="nav-command"><span>cargo install --git https://github.com/arsyadal/runbook-ai</span><button class="copy-mini" type="button" data-copy="cargo install --git https://github.com/arsyadal/runbook-ai">Copy</button></div><a class="btn btn-primary" href="https://github.com/arsyadal/runbook-ai" target="_blank" rel="noreferrer">Star on GitHub ↗</a></div><button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">☰</button></div><div class="mobile-menu" id="mobile-menu"><a href="index.html">Home</a><a href="#quickstart">Quickstart</a><a href="#commands">Commands</a><a href="#mcp">MCP</a><a href="#templates">Templates</a><a href="https://github.com/arsyadal/runbook-ai" target="_blank" rel="noreferrer">Star on GitHub ↗</a></div></nav>
+  <header class="hero"><div class="container"><div class="eyebrow"><span class="pulse"></span> Documentation</div><h1><span class="gradient">Runbook docs for fast setup and daily use.</span></h1><p class="lead">Install Runbook, capture your AI-assisted debugging session, and generate durable engineering artifacts that survive chat resets, provider switches, and handoffs.</p></div></header>
   <main class="container layout">
     <aside class="sidebar"><a href="#quickstart">Quickstart</a><a href="#workflow">Recommended workflow</a><a href="#commands">Command reference</a><a href="#shell">Shell integration</a><a href="#ai">AI summaries</a><a href="#mcp">MCP server</a><a href="#templates">Custom templates</a><a href="#storage">Storage and outputs</a></aside>
     <div class="content">
-      <section id="quickstart" class="section"><h2>Quickstart</h2><p>Install from source, initialize local storage, start a session, record commands, add notes, and generate documentation.</p><pre><code>cargo install --path .
-runbookai init
-runbookai start "Fix payment 500"
-runbookai exec "npm test"
-runbookai note --type root-cause "JWT secret missing in test env"
-runbookai exec "npm run build"
-runbookai stop
-runbookai generate all</code></pre><p class="note">Generated Markdown files are written to <code>docs/runbooks/</code>. Session data is stored locally in <code>.runbookai/</code>.</p></section>
-      <section id="workflow" class="section"><h2>Recommended workflow</h2><div class="grid"><div class="card"><b>1. Start before debugging</b><span>Create a named session before asking an AI agent to investigate or modify code.</span></div><div class="card"><b>2. Record commands</b><span>Use <code>runbookai exec</code> for full output capture, or shell hooks for automatic command logging.</span></div><div class="card"><b>3. Add human notes</b><span>Record findings, decisions, risks, root causes, and failed attempts while the context is still fresh.</span></div><div class="card"><b>4. Generate artifacts</b><span>Create runbooks, changelogs, postmortems, PR notes, and next-agent briefs from the same session.</span></div></div></section>
-      <section id="commands" class="section"><h2>Command reference</h2><h3>Session lifecycle</h3><pre><code>runbookai init
-runbookai start "Fix login 401 error"
-runbookai status
-runbookai stop</code></pre><h3>Capture commands and notes</h3><pre><code>runbookai exec "npm test"
-runbookai exec "npm run build"
-runbookai note --type finding "Login test fails with 401."
-runbookai note --type root-cause "JWT secret is missing."
-runbookai note --type decision "Validate env during bootstrap."
-runbookai note --type risk "Production env names must not change."</code></pre><h3>Generate documentation</h3><pre><code>runbookai generate runbook
-runbookai generate changelog
-runbookai generate postmortem
-runbookai generate pr
-runbookai generate all</code></pre><h3>Export and search</h3><pre><code>runbookai export --format json
-runbookai export --format markdown
-runbookai search "JWT secret"</code></pre></section>
-      <section id="shell" class="section"><h2>Shell integration</h2><p>If you do not want to type <code>runbookai exec</code> for every command, enable shell hooks. Commands will be recorded automatically whenever a session is active.</p><pre><code># Zsh
-source &lt;(runbookai shell-hook zsh)
+      <section id="quickstart" class="section"><h2>Quickstart</h2><p>Install from source, initialize local storage, start a session, record commands, add notes, and generate documentation.</p><pre><code>cargo install --git https://github.com/arsyadal/runbook-ai
+runbook init
+runbook start "Fix payment 500"
+runbook exec "npm test"
+runbook note --type root-cause "JWT secret missing in test env"
+runbook exec "npm run build"
+runbook stop
+runbook generate all</code></pre><p class="note">Generated Markdown files are written to <code>docs/runbooks/</code>. Session data is stored locally in <code>.runbook/</code>.</p></section>
+      <section id="workflow" class="section"><h2>Recommended workflow</h2><div class="grid"><div class="card"><b>1. Start before debugging</b><span>Create a named session before asking an AI agent to investigate or modify code.</span></div><div class="card"><b>2. Record commands</b><span>Use <code>runbook exec</code> for full output capture, or shell hooks for automatic command logging.</span></div><div class="card"><b>3. Add human notes</b><span>Record findings, decisions, risks, root causes, and failed attempts while the context is still fresh.</span></div><div class="card"><b>4. Generate artifacts</b><span>Create runbooks, changelogs, postmortems, PR notes, and next-agent briefs from the same session.</span></div></div></section>
+      <section id="commands" class="section"><h2>Command reference</h2><h3>Session lifecycle</h3><pre><code>runbook init
+runbook start "Fix login 401 error"
+runbook status
+runbook stop</code></pre><h3>Capture commands and notes</h3><pre><code>runbook exec "npm test"
+runbook exec "npm run build"
+runbook note --type finding "Login test fails with 401."
+runbook note --type root-cause "JWT secret is missing."
+runbook note --type decision "Validate env during bootstrap."
+runbook note --type risk "Production env names must not change."</code></pre><h3>Generate documentation</h3><pre><code>runbook generate runbook
+runbook generate changelog
+runbook generate postmortem
+runbook generate pr
+runbook generate all</code></pre><h3>Export and search</h3><pre><code>runbook export --format json
+runbook export --format markdown
+runbook search "JWT secret"</code></pre></section>
+      <section id="shell" class="section"><h2>Shell integration</h2><p>If you do not want to type <code>runbook exec</code> for every command, enable shell hooks. Commands will be recorded automatically whenever a session is active.</p><pre><code># Zsh
+source &lt;(runbook shell-hook zsh)
 
 # Bash
-source &lt;(runbookai shell-hook bash)</code></pre><pre><code># PowerShell
-runbookai shell-hook powershell | Invoke-Expression</code></pre><p class="note warn">For full command output and error capture, <code>runbookai exec</code> is still recommended.</p></section>
-      <section id="ai" class="section"><h2>AI-assisted summaries</h2><p>RunbookAI can generate AI-assisted summaries with OpenAI, Gemini, or local Ollama.</p><pre><code>runbookai generate runbook --ai
-runbookai generate pr --ai
-runbookai generate all --ai</code></pre><ul><li><code>OPENAI_API_KEY</code> → OpenAI, default model <code>gpt-4o</code></li><li><code>GEMINI_API_KEY</code> → Gemini, default model <code>gemini-1.5-pro</code></li><li>No API key → local Ollama, default model <code>llama3</code></li></ul><pre><code>RUNBOOKAI_MODEL=llama3.1 runbookai generate runbook --ai</code></pre></section>
-      <section id="mcp" class="section"><h2>MCP server</h2><p>RunbookAI supports the Model Context Protocol so AI agents can query previous sessions directly.</p><pre><code>runbookai mcp serve</code></pre><p>Claude Desktop example:</p><pre><code>{
+source &lt;(runbook shell-hook bash)</code></pre><pre><code># PowerShell
+runbook shell-hook powershell | Invoke-Expression</code></pre><p class="note warn">For full command output and error capture, <code>runbook exec</code> is still recommended.</p></section>
+      <section id="ai" class="section"><h2>AI-assisted summaries</h2><p>Runbook can generate AI-assisted summaries with OpenAI, Gemini, or local Ollama.</p><pre><code>runbook generate runbook --ai
+runbook generate pr --ai
+runbook generate all --ai</code></pre><ul><li><code>OPENAI_API_KEY</code> → OpenAI, default model <code>gpt-4o</code></li><li><code>GEMINI_API_KEY</code> → Gemini, default model <code>gemini-1.5-pro</code></li><li>No API key → local Ollama, default model <code>llama3</code></li></ul><pre><code>RUNBOOK_MODEL=llama3.1 runbook generate runbook --ai</code></pre></section>
+      <section id="mcp" class="section"><h2>MCP server</h2><p>Runbook supports the Model Context Protocol so AI agents can query previous sessions directly.</p><pre><code>runbook mcp serve</code></pre><p>Claude Desktop example:</p><pre><code>{
   "mcpServers": {
-    "runbookai": {
-      "command": "runbookai",
+    "runbook": {
+      "command": "runbook",
       "args": ["mcp", "serve"]
     }
   }
 }</code></pre><div class="grid"><div class="card"><b>Tool</b><span><code>search_sessions</code> searches through old sessions.</span></div><div class="card"><b>Resource</b><span><code>runbook://sessions/&lt;id&gt;</code> reads full session data as JSON.</span></div></div></section>
-      <section id="templates" class="section"><h2>Custom templates</h2><p>RunbookAI supports custom Handlebars templates stored in:</p><pre><code>.runbookai/templates/</code></pre><p>Use templates when your team wants a specific runbook, PR, postmortem, or changelog format.</p></section>
-      <section id="storage" class="section"><h2>Storage and outputs</h2><div class="grid"><div class="card"><b>Local session data</b><span><code>.runbookai/</code> stores captured session records locally in the repository.</span></div><div class="card"><b>Generated docs</b><span><code>docs/runbooks/</code> contains generated Markdown artifacts.</span></div><div class="card"><b>Redaction</b><span>Basic secret redaction is applied to captured diffs and outputs.</span></div><div class="card"><b>Git awareness</b><span>Changed files and Git diff context are captured to make handoffs more complete.</span></div></div></section>
+      <section id="templates" class="section"><h2>Custom templates</h2><p>Runbook supports custom Handlebars templates stored in:</p><pre><code>.runbook/templates/</code></pre><p>Use templates when your team wants a specific runbook, PR, postmortem, or changelog format.</p></section>
+      <section id="storage" class="section"><h2>Storage and outputs</h2><div class="grid"><div class="card"><b>Local session data</b><span><code>.runbook/</code> stores captured session records locally in the repository.</span></div><div class="card"><b>Generated docs</b><span><code>docs/runbooks/</code> contains generated Markdown artifacts.</span></div><div class="card"><b>Redaction</b><span>Basic secret redaction is applied to captured diffs and outputs.</span></div><div class="card"><b>Git awareness</b><span>Changed files and Git diff context are captured to make handoffs more complete.</span></div></div></section>
     </div>
   </main>
-  <footer><div class="container footer-inner"><span>© 2026 RunbookAI</span><span><a href="index.html">Landing page</a> · <a href="https://github.com/arsyadal/runbook-ai">GitHub</a></span></div></footer>
+  <footer><div class="container footer-inner"><span>© 2026 Runbook</span><span><a href="index.html">Landing page</a> · <a href="https://github.com/arsyadal/runbook-ai">GitHub</a></span></div></footer>
   <script>
     const nav = document.getElementById('site-nav');
     const progress = document.getElementById('scroll-progress');

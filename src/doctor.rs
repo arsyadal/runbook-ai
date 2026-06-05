@@ -65,7 +65,7 @@ fn build_report() -> Result<DoctorReport> {
             if storage_dir.exists() {
                 Check::Ok(format!("{} found", STORAGE_DIR))
             } else {
-                Check::Warn(format!("{} not found; run `runbookai init`", STORAGE_DIR))
+                Check::Warn(format!("{} not found; run `runbook init`", STORAGE_DIR))
             },
         ),
         to_doctor_check(
@@ -133,7 +133,7 @@ fn summarize(checks: &[DoctorCheck]) -> DoctorSummary {
 }
 
 fn print_text_report(report: &DoctorReport) {
-    println!("RunbookAI Doctor\n");
+    println!("Runbook Doctor\n");
     println!("Project root: {}", report.project_root);
     for check in &report.checks {
         let status = match check.status {
@@ -164,17 +164,17 @@ fn ai_provider_status() -> Check {
     if env::var("OPENAI_API_KEY").is_ok() {
         Check::Ok(format!(
             "OpenAI ({})",
-            env::var("RUNBOOKAI_MODEL").unwrap_or_else(|_| "gpt-4o".to_string())
+            env::var("RUNBOOK_MODEL").unwrap_or_else(|_| "gpt-4o".to_string())
         ))
     } else if env::var("GEMINI_API_KEY").is_ok() {
         Check::Ok(format!(
             "Gemini ({})",
-            env::var("RUNBOOKAI_MODEL").unwrap_or_else(|_| "gemini-1.5-pro".to_string())
+            env::var("RUNBOOK_MODEL").unwrap_or_else(|_| "gemini-1.5-pro".to_string())
         ))
     } else {
         Check::Ok(format!(
             "Ollama default ({})",
-            env::var("RUNBOOKAI_MODEL").unwrap_or_else(|_| "llama3".to_string())
+            env::var("RUNBOOK_MODEL").unwrap_or_else(|_| "llama3".to_string())
         ))
     }
 }

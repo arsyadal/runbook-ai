@@ -19,7 +19,7 @@ pub fn init() -> Result<()> {
         write_json(&config_path, &config)?;
     }
 
-    println!("RunbookAI initialized.");
+    println!("Runbook initialized.");
     println!("Storage: {}", root.join(STORAGE_DIR).display());
     println!("Docs:    {}", root.join("docs/runbooks").display());
     Ok(())
@@ -29,7 +29,7 @@ pub fn start(title_parts: Vec<String>) -> Result<()> {
     init_storage_if_needed()?;
     if active_session_id().is_ok() {
         return Err(anyhow!(
-            "A RunbookAI session is already active. Run `runbookai status` or `runbookai stop`."
+            "A Runbook session is already active. Run `runbook status` or `runbook stop`."
         ));
     }
 
@@ -71,15 +71,15 @@ pub fn start(title_parts: Vec<String>) -> Result<()> {
     save_session(&session)?;
     fs::write(root.join(ACTIVE_SESSION_FILE), &id)?;
 
-    println!("RunbookAI recording started.\n");
+    println!("Runbook recording started.\n");
     println!("Session ID: {}", session.id);
     println!("Project: {}", session.project_name);
     if let Some(branch) = &session.branch_name {
         println!("Branch: {branch}");
     }
-    println!("\nRun commands with: runbookai exec \"<command>\"");
-    println!("Add notes with:   runbookai note --type decision \"...\"");
-    println!("Stop with:        runbookai stop");
+    println!("\nRun commands with: runbook exec \"<command>\"");
+    println!("Add notes with:   runbook note --type decision \"...\"");
+    println!("Stop with:        runbook stop");
     Ok(())
 }
 
@@ -87,14 +87,14 @@ pub fn status() -> Result<()> {
     let id = match active_session_id() {
         Ok(id) => id,
         Err(_) => {
-            println!("No active RunbookAI session.");
+            println!("No active Runbook session.");
             return Ok(());
         }
     };
     let session = load_session(&id)?;
     let duration = Utc::now().signed_duration_since(session.started_at);
 
-    println!("Active RunbookAI session\n");
+    println!("Active Runbook session\n");
     println!("Session ID: {}", session.id);
     println!("Title: {}", session.title);
     println!("Project: {}", session.project_name);
@@ -131,7 +131,7 @@ pub fn stop() -> Result<()> {
         .ended_at
         .unwrap_or_else(Utc::now)
         .signed_duration_since(session.started_at);
-    println!("RunbookAI recording stopped.\n");
+    println!("Runbook recording stopped.\n");
     println!("Session Summary:");
     println!("- Duration: {} minutes", duration.num_minutes());
     println!("- Commands recorded: {}", session.commands.len());
@@ -139,10 +139,10 @@ pub fn stop() -> Result<()> {
     println!("- Files changed: {}", changed_files(&session).len());
     println!("- Notes added: {}", session.notes.len());
     println!("\nGenerate documentation:");
-    println!("- runbookai generate runbook");
-    println!("- runbookai generate changelog");
-    println!("- runbookai generate postmortem");
-    println!("- runbookai generate all");
+    println!("- runbook generate runbook");
+    println!("- runbook generate changelog");
+    println!("- runbook generate postmortem");
+    println!("- runbook generate all");
     Ok(())
 }
 
@@ -198,7 +198,7 @@ pub fn latest_or_active_session() -> Result<Session> {
     let sessions = list_sessions()?;
     let latest = sessions
         .last()
-        .ok_or_else(|| anyhow!("No RunbookAI sessions found. Run `runbookai start` first."))?;
+        .ok_or_else(|| anyhow!("No Runbook sessions found. Run `runbook start` first."))?;
     load_session(latest)
 }
 

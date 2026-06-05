@@ -56,7 +56,7 @@ async fn handle_request(req: JsonRpcRequest) -> Result<()> {
                         "tools": {}
                     },
                     "serverInfo": {
-                        "name": "runbookai",
+                        "name": "runbook",
                         "version": env!("CARGO_PKG_VERSION")
                     }
                 }),
@@ -106,7 +106,7 @@ async fn handle_request(req: JsonRpcRequest) -> Result<()> {
                     "tools": [
                         {
                             "name": "search_sessions",
-                            "description": "Search through old RunbookAI sessions",
+                            "description": "Search through old Runbook sessions",
                             "inputSchema": {
                                 "type": "object",
                                 "properties": {

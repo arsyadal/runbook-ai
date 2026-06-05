@@ -2,8 +2,8 @@ use assert_cmd::Command;
 use std::fs;
 use tempfile::TempDir;
 
-fn runbookai() -> Command {
-    Command::cargo_bin("runbookai").unwrap()
+fn runbook() -> Command {
+    Command::cargo_bin("runbook").unwrap()
 }
 
 fn setup_repo() -> TempDir {
@@ -38,11 +38,11 @@ fn setup_repo() -> TempDir {
 
 #[test]
 fn help_shows_usage() {
-    runbookai()
+    runbook()
         .arg("--help")
         .assert()
         .success()
-        .stdout(predicates::str::contains("runbookai"))
+        .stdout(predicates::str::contains("runbook"))
         .stdout(predicates::str::contains("Turn AI coding agent sessions"));
 }
 
@@ -51,15 +51,15 @@ fn init_creates_storage_dirs() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai()
+    runbook()
         .arg("init")
         .current_dir(repo)
         .assert()
         .success()
-        .stdout(predicates::str::contains("RunbookAI initialized"));
+        .stdout(predicates::str::contains("Runbook initialized"));
 
-    assert!(repo.join(".runbookai").exists());
-    assert!(repo.join(".runbookai/config.json").exists());
+    assert!(repo.join(".runbook").exists());
+    assert!(repo.join(".runbook/config.json").exists());
     assert!(repo.join("docs/runbooks").exists());
 }
 
@@ -68,12 +68,12 @@ fn doctor_reports_environment() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai()
+    runbook()
         .arg("doctor")
         .current_dir(repo)
         .assert()
         .success()
-        .stdout(predicates::str::contains("RunbookAI Doctor"))
+        .stdout(predicates::str::contains("Runbook Doctor"))
         .stdout(predicates::str::contains("Git:"))
         .stdout(predicates::str::contains("Storage:"))
         .stdout(predicates::str::contains("AI provider:"))
@@ -85,7 +85,7 @@ fn doctor_json_outputs_valid_json() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    let output = runbookai()
+    let output = runbook()
         .args(["doctor", "--json"])
         .current_dir(repo)
         .assert()
@@ -103,12 +103,12 @@ fn doctor_json_outputs_valid_json() {
 
 #[test]
 fn shell_hook_supports_powershell() {
-    runbookai()
+    runbook()
         .args(["shell-hook", "powershell"])
         .assert()
         .success()
         .stdout(predicates::str::contains(
-            "RunbookAI PowerShell Integration",
+            "Runbook PowerShell Integration",
         ))
         .stdout(predicates::str::contains("function global:prompt"));
 }
@@ -118,17 +118,17 @@ fn start_creates_active_session() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai().arg("init").current_dir(repo).assert().success();
+    runbook().arg("init").current_dir(repo).assert().success();
 
-    runbookai()
+    runbook()
         .args(["start", "Fix login error"])
         .current_dir(repo)
         .assert()
         .success()
-        .stdout(predicates::str::contains("RunbookAI recording started"))
+        .stdout(predicates::str::contains("Runbook recording started"))
         .stdout(predicates::str::contains("Session ID:"));
 
-    assert!(repo.join(".runbookai/active_session").exists());
+    assert!(repo.join(".runbook/active_session").exists());
 }
 
 #[test]
@@ -136,19 +136,19 @@ fn status_shows_active_session() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai().arg("init").current_dir(repo).assert().success();
-    runbookai()
+    runbook().arg("init").current_dir(repo).assert().success();
+    runbook()
         .args(["start", "Test session"])
         .current_dir(repo)
         .assert()
         .success();
 
-    runbookai()
+    runbook()
         .arg("status")
         .current_dir(repo)
         .assert()
         .success()
-        .stdout(predicates::str::contains("Active RunbookAI session"))
+        .stdout(predicates::str::contains("Active Runbook session"))
         .stdout(predicates::str::contains("Test session"));
 }
 
@@ -157,14 +157,14 @@ fn exec_records_command() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai().arg("init").current_dir(repo).assert().success();
-    runbookai()
+    runbook().arg("init").current_dir(repo).assert().success();
+    runbook()
         .args(["start", "Test session"])
         .current_dir(repo)
         .assert()
         .success();
 
-    runbookai()
+    runbook()
         .args(["exec", "echo hello"])
         .current_dir(repo)
         .assert()
@@ -177,14 +177,14 @@ fn exec_fails_on_bad_command() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai().arg("init").current_dir(repo).assert().success();
-    runbookai()
+    runbook().arg("init").current_dir(repo).assert().success();
+    runbook()
         .args(["start", "Test session"])
         .current_dir(repo)
         .assert()
         .success();
 
-    runbookai()
+    runbook()
         .args(["exec", "exit 1"])
         .current_dir(repo)
         .assert()
@@ -196,14 +196,14 @@ fn note_adds_to_session() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai().arg("init").current_dir(repo).assert().success();
-    runbookai()
+    runbook().arg("init").current_dir(repo).assert().success();
+    runbook()
         .args(["start", "Test session"])
         .current_dir(repo)
         .assert()
         .success();
 
-    runbookai()
+    runbook()
         .args(["note", "--type", "root-cause", "Missing env var"])
         .current_dir(repo)
         .assert()
@@ -216,23 +216,23 @@ fn stop_completes_session() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai().arg("init").current_dir(repo).assert().success();
-    runbookai()
+    runbook().arg("init").current_dir(repo).assert().success();
+    runbook()
         .args(["start", "Test session"])
         .current_dir(repo)
         .assert()
         .success();
 
-    runbookai()
+    runbook()
         .arg("stop")
         .current_dir(repo)
         .assert()
         .success()
-        .stdout(predicates::str::contains("RunbookAI recording stopped"))
+        .stdout(predicates::str::contains("Runbook recording stopped"))
         .stdout(predicates::str::contains("Session Summary:"));
 
     // Active session file should be removed
-    assert!(!repo.join(".runbookai/active_session").exists());
+    assert!(!repo.join(".runbook/active_session").exists());
 }
 
 #[test]
@@ -240,28 +240,28 @@ fn generate_runbook_creates_markdown() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai().arg("init").current_dir(repo).assert().success();
-    runbookai()
+    runbook().arg("init").current_dir(repo).assert().success();
+    runbook()
         .args(["start", "Fix login error"])
         .current_dir(repo)
         .assert()
         .success();
 
-    runbookai()
+    runbook()
         .args(["exec", "echo hello"])
         .current_dir(repo)
         .assert()
         .success();
 
-    runbookai()
+    runbook()
         .args(["note", "--type", "root-cause", "Missing JWT secret"])
         .current_dir(repo)
         .assert()
         .success();
 
-    runbookai().arg("stop").current_dir(repo).assert().success();
+    runbook().arg("stop").current_dir(repo).assert().success();
 
-    runbookai()
+    runbook()
         .args(["generate", "runbook"])
         .current_dir(repo)
         .assert()
@@ -287,15 +287,15 @@ fn generate_all_creates_three_files() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai().arg("init").current_dir(repo).assert().success();
-    runbookai()
+    runbook().arg("init").current_dir(repo).assert().success();
+    runbook()
         .args(["start", "Test session"])
         .current_dir(repo)
         .assert()
         .success();
-    runbookai().arg("stop").current_dir(repo).assert().success();
+    runbook().arg("stop").current_dir(repo).assert().success();
 
-    runbookai()
+    runbook()
         .args(["generate", "all"])
         .current_dir(repo)
         .assert()
@@ -323,15 +323,15 @@ fn export_json_outputs_valid_json() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai().arg("init").current_dir(repo).assert().success();
-    runbookai()
+    runbook().arg("init").current_dir(repo).assert().success();
+    runbook()
         .args(["start", "Test session"])
         .current_dir(repo)
         .assert()
         .success();
-    runbookai().arg("stop").current_dir(repo).assert().success();
+    runbook().arg("stop").current_dir(repo).assert().success();
 
-    let output = runbookai()
+    let output = runbook()
         .args(["export", "--format", "json"])
         .current_dir(repo)
         .assert()
@@ -350,14 +350,14 @@ fn double_start_fails() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai().arg("init").current_dir(repo).assert().success();
-    runbookai()
+    runbook().arg("init").current_dir(repo).assert().success();
+    runbook()
         .args(["start", "First session"])
         .current_dir(repo)
         .assert()
         .success();
 
-    runbookai()
+    runbook()
         .args(["start", "Second session"])
         .current_dir(repo)
         .assert()
@@ -370,12 +370,12 @@ fn status_without_session_prints_no_active() {
     let dir = setup_repo();
     let repo = dir.path();
 
-    runbookai().arg("init").current_dir(repo).assert().success();
+    runbook().arg("init").current_dir(repo).assert().success();
 
-    runbookai()
+    runbook()
         .arg("status")
         .current_dir(repo)
         .assert()
         .success()
-        .stdout(predicates::str::contains("No active RunbookAI session"));
+        .stdout(predicates::str::contains("No active Runbook session"));
 }
