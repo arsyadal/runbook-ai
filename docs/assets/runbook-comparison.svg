@@ -1,0 +1,89 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Perbandingan bekerja tanpa RunbookAI dan dengan RunbookAI</title>
+  <desc id="desc">Infografik visual yang membandingkan workflow AI coding agent tanpa dokumentasi otomatis dan dengan RunbookAI.</desc>
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="10%" r="85%">
+      <stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.26"/>
+      <stop offset="45%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#030712"/>
+    </radialGradient>
+    <linearGradient id="badCard" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#3F1820"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="goodCard" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#06372F"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#A3E635"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+    <pattern id="grid" width="42" height="42" patternUnits="userSpaceOnUse">
+      <path d="M 42 0 L 0 0 0 42" stroke="#FFFFFF" stroke-opacity="0.045" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="720" fill="url(#bgGlow)"/>
+  <rect width="1200" height="720" fill="url(#grid)"/>
+  <circle cx="1030" cy="110" r="160" fill="#A3E635" opacity="0.08"/>
+  <circle cx="130" cy="635" r="190" fill="#F43F5E" opacity="0.10"/>
+
+  <text x="80" y="82" fill="#F8FAFC" font-family="Segoe UI, sans-serif" font-size="46" font-weight="800">AI Session: Chaos vs Runbook</text>
+  <text x="82" y="122" fill="#CBD5E1" font-family="Segoe UI, sans-serif" font-size="20">Tanpa kehilangan konteks. Tanpa mengulang penjelasan. Siap dilanjutkan manusia atau AI agent berikutnya.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="170" width="490" height="460" rx="34" fill="url(#badCard)" stroke="#FB7185" stroke-opacity="0.35"/>
+    <rect x="640" y="170" width="490" height="460" rx="34" fill="url(#goodCard)" stroke="#2DD4BF" stroke-opacity="0.45"/>
+  </g>
+
+  <g>
+    <rect x="105" y="205" width="64" height="64" rx="18" fill="#FB7185" opacity="0.15"/>
+    <text x="122" y="251" fill="#FDA4AF" font-family="Segoe UI Emoji, Apple Color Emoji, sans-serif" font-size="34">✕</text>
+    <text x="190" y="232" fill="#FFE4E6" font-family="Segoe UI, sans-serif" font-size="28" font-weight="800">Tanpa RunbookAI</text>
+    <text x="190" y="260" fill="#FDA4AF" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">konteks rapuh, handoff berat</text>
+
+    <g font-family="Segoe UI, sans-serif" font-size="20" fill="#F8FAFC">
+      <text x="115" y="330">• Chat reset = progress hilang</text>
+      <text x="115" y="380">• Error terkubur di terminal</text>
+      <text x="115" y="430">• Command history tercecer</text>
+      <text x="115" y="480">• Root cause harus diingat manual</text>
+      <text x="115" y="530">• Agent baru perlu briefing ulang</text>
+    </g>
+
+    <path d="M125 575 C210 545 310 610 430 570" stroke="#FB7185" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 12" opacity="0.75"/>
+    <text x="115" y="603" fill="#FDA4AF" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">Boros waktu + boros token</text>
+  </g>
+
+  <g>
+    <rect x="675" y="205" width="64" height="64" rx="18" fill="#2DD4BF" opacity="0.16"/>
+    <text x="691" y="250" fill="#5EEAD4" font-family="Segoe UI Emoji, Apple Color Emoji, sans-serif" font-size="34">✓</text>
+    <text x="760" y="232" fill="#ECFDF5" font-family="Segoe UI, sans-serif" font-size="28" font-weight="800">Dengan RunbookAI</text>
+    <text x="760" y="260" fill="#86EFAC" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">engineering memory yang reusable</text>
+
+    <g font-family="Segoe UI, sans-serif" font-size="20" fill="#F8FAFC">
+      <text x="685" y="330">• Commands &amp; exit code terekam</text>
+      <text x="685" y="380">• Error dan root cause tersummary</text>
+      <text x="685" y="430">• Changed files + diff tercatat</text>
+      <text x="685" y="480">• Runbook, changelog, PR note otomatis</text>
+      <text x="685" y="530">• Next-Agent Brief siap dipakai</text>
+    </g>
+
+    <path d="M695 575 C780 545 895 545 1010 575" stroke="url(#accent)" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="1010" cy="575" r="8" fill="#A3E635"/>
+    <text x="685" y="603" fill="#A7F3D0" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">Lebih cepat, rapi, dan mudah dihandoff</text>
+  </g>
+
+  <g>
+    <rect x="535" y="336" width="130" height="58" rx="29" fill="#0F172A" stroke="#334155"/>
+    <path d="M567 365 H625" stroke="url(#accent)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M612 350 L632 365 L612 380" stroke="#A3E635" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="559" y="425" fill="#94A3B8" font-family="Segoe UI, sans-serif" font-size="14" font-weight="700">context bridge</text>
+  </g>
+
+  <rect x="80" y="660" width="1040" height="1" fill="#FFFFFF" opacity="0.12"/>
+  <text x="80" y="690" fill="#94A3B8" font-family="Segoe UI, sans-serif" font-size="16">RunbookAI — turn AI coding sessions into reusable runbooks, changelogs, postmortems, and next-agent briefs.</text>
+</svg>

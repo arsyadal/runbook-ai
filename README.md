@@ -29,6 +29,10 @@ RunbookAI converts that process into repo-friendly Markdown documentation.
 
 ## Comparison: With RunbookAI vs Without RunbookAI
 
+![Visual comparison: without RunbookAI vs with RunbookAI](docs/assets/runbook-comparison.svg)
+
+Media assets: [PNG](docs/assets/runbook-comparison.png) · [JPG](docs/assets/runbook-comparison.jpg) · [MP4](docs/assets/runbook-comparison.mp4)
+
 | Area | Without RunbookAI | With RunbookAI |
 | --- | --- | --- |
 | Session continuity | Context is trapped in one chat and can be lost after reset, limit, or provider switch. | Work is captured as durable Markdown and can be handed to any future agent or teammate. |
