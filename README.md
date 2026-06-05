@@ -27,6 +27,14 @@ AI coding tools like Claude Code, Cursor, Codex, Gemini CLI, OpenCode, pi, and C
 
 RunbookAI converts that process into repo-friendly Markdown documentation.
 
+## Short Demo Video
+
+<a href="docs/assets/runbook-demo.mp4">
+  <img src="docs/assets/runbook-demo-poster.png" alt="RunbookAI short demo video preview" width="100%">
+</a>
+
+Watch the short usage demo: [runbook-demo.mp4](docs/assets/runbook-demo.mp4)
+
 ## Comparison: With RunbookAI vs Without RunbookAI
 
 ![Visual comparison: without RunbookAI vs with RunbookAI](docs/assets/runbook-comparison.svg)
