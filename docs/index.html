@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RunbookAI — Context Insurance for AI Coding Agents</title>
+  <meta name="description" content="RunbookAI turns AI coding sessions into reusable runbooks, changelogs, PR notes, postmortems, and next-agent briefs." />
+  <meta property="og:title" content="RunbookAI — Never lose your AI coding context again" />
+  <meta property="og:description" content="Capture commands, errors, changed files, decisions, and root causes while you work with AI coding agents." />
+  <meta property="og:image" content="assets/runbook-demo-poster.png" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-2: #07111f;
+      --surface: rgba(15, 23, 42, .72);
+      --surface-2: rgba(8, 17, 31, .88);
+      --line: rgba(148, 163, 184, .18);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --soft: #cbd5e1;
+      --teal: #2dd4bf;
+      --lime: #a3e635;
+      --sky: #38bdf8;
+      --amber: #fbbf24;
+      --rose: #fb7185;
+      --shadow: 0 30px 90px rgba(0, 0, 0, .42);
+      --radius: 28px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(45, 212, 191, .22), transparent 36rem),
+        radial-gradient(circle at 88% 10%, rgba(163, 230, 53, .10), transparent 26rem),
+        radial-gradient(circle at 12% 42%, rgba(56, 189, 248, .10), transparent 30rem),
+        var(--bg);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: -.01em;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, #000, transparent 85%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(148, 163, 184, .12);
+      backdrop-filter: blur(22px);
+      background: linear-gradient(180deg, rgba(2, 6, 23, .84), rgba(2, 6, 23, .58));
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    .nav::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(45,212,191,.5), rgba(163,230,53,.35), transparent);
+      opacity: .75;
+    }
+    .nav.scrolled { box-shadow: 0 18px 55px rgba(0,0,0,.28); border-bottom-color: rgba(45,212,191,.16); }
+    .scroll-progress {
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--teal), var(--lime));
+      box-shadow: 0 0 24px rgba(45,212,191,.35);
+    }
+    .nav-inner { height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 22px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 850; font-size: 18px; }
+    .mark {
+      width: 36px; height: 36px; border-radius: 14px;
+      background: radial-gradient(circle at 32% 22%, rgba(255,255,255,.22), transparent 26px), linear-gradient(135deg, rgba(45,212,191,.28), rgba(163,230,53,.17));
+      border: 1px solid rgba(45,212,191,.48);
+      display: grid; place-items: center;
+      box-shadow: 0 0 34px rgba(45,212,191,.18), inset 0 1px 0 rgba(255,255,255,.1);
+    }
+    .mark svg { width: 22px; height: 22px; }
+    .nav-links { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 14px; }
+    .nav-links a {
+      position: relative;
+      padding: 9px 11px;
+      border-radius: 999px;
+      transition: color .18s ease, background .18s ease;
+    }
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 4px;
+      height: 2px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--teal), var(--lime));
+      opacity: 0;
+      transform: scaleX(.4);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); background: rgba(45,212,191,.07); }
+    .nav-links a:hover::after, .nav-links a.active::after { opacity: 1; transform: scaleX(1); }
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+    .nav-command {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.16);
+      background: rgba(2,6,23,.52);
+      color: #d1fae5;
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .copy-mini {
+      border: 0;
+      color: #04111a;
+      background: linear-gradient(135deg, var(--teal), var(--lime));
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+    .menu-toggle { display: none; width: 42px; height: 42px; border-radius: 14px; border: 1px solid rgba(148,163,184,.22); background: rgba(15,23,42,.72); color: var(--text); font-size: 20px; }
+    .mobile-menu { display: none; border-top: 1px solid rgba(148,163,184,.12); padding: 12px 20px 18px; background: rgba(2,6,23,.9); }
+    .mobile-menu a { display: block; padding: 12px 6px; color: var(--soft); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      height: 44px; padding: 0 17px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, .22);
+      color: var(--text);
+      background: rgba(15, 23, 42, .72);
+      font-weight: 750;
+      font-size: 14px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: rgba(45, 212, 191, .55); background: rgba(15, 23, 42, .95); }
+    .btn-primary {
+      color: #04111a;
+      border: 0;
+      background: linear-gradient(135deg, var(--teal), var(--lime));
+      box-shadow: 0 18px 50px rgba(45, 212, 191, .2);
+    }
+
+    .hero { padding: 92px 0 68px; }
+    .hero-grid { display: grid; grid-template-columns: 1.02fr .98fr; gap: 44px; align-items: center; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 12px;
+      border: 1px solid rgba(45, 212, 191, .22);
+      border-radius: 999px;
+      background: rgba(45, 212, 191, .08);
+      color: #a7f3d0;
+      font-size: 13px;
+      font-weight: 780;
+    }
+    .pulse { width: 8px; height: 8px; border-radius: 99px; background: var(--lime); box-shadow: 0 0 0 6px rgba(163,230,53,.12); }
+    h1 {
+      margin: 24px 0 20px;
+      font-size: clamp(52px, 7vw, 92px);
+      line-height: .92;
+      letter-spacing: -.075em;
+      max-width: 840px;
+    }
+    .gradient-text { background: linear-gradient(135deg, #fff, #b7f7e9 45%, #d9ffa1); -webkit-background-clip: text; color: transparent; }
+    .hero-copy { color: var(--soft); font-size: 20px; line-height: 1.65; max-width: 660px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .terminal-line {
+      margin-top: 24px;
+      display: inline-flex;
+      max-width: 100%;
+      padding: 13px 16px;
+      border-radius: 16px;
+      background: rgba(2, 6, 23, .72);
+      border: 1px solid rgba(148, 163, 184, .16);
+      color: #d1fae5;
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    .hero-visual {
+      position: relative;
+      border-radius: 34px;
+      padding: 12px;
+      background: linear-gradient(135deg, rgba(45,212,191,.35), rgba(163,230,53,.12), rgba(56,189,248,.20));
+      box-shadow: var(--shadow);
+    }
+    .hero-visual img { display: block; width: 100%; border-radius: 24px; background: #06131f; }
+    .float-card {
+      position: absolute;
+      right: -18px;
+      bottom: -22px;
+      width: min(310px, 70%);
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(163, 230, 53, .35);
+      background: rgba(7, 26, 26, .9);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
+    .float-card strong { display: block; margin-bottom: 7px; }
+    .float-card span { color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+    .logo-strip { padding: 32px 0 70px; color: var(--muted); }
+    .strip-caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .strip-caption strong { color: #cbd5e1; }
+    .trademark-note { opacity: .72; }
+    .strip-box {
+      display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      padding: 16px;
+      border: 1px solid rgba(148,163,184,.12);
+      border-radius: 24px;
+      background: rgba(15,23,42,.38);
+    }
+    .tool-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 9px 13px;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,.14);
+      background: rgba(2,6,23,.35);
+      color: #cbd5e1;
+      font-weight: 760;
+      opacity: .86;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .tool-logo:hover { transform: translateY(-1px); border-color: rgba(45,212,191,.32); background: rgba(2,6,23,.58); opacity: 1; }
+    .brand-logo {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      border-radius: 9px;
+      padding: 5px;
+      background: rgba(248,250,252,.92);
+      box-shadow: 0 0 24px rgba(45,212,191,.10);
+    }
+    .brand-logo.wordmark { width: 48px; padding: 6px; }
+    .tool-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      color: #04111a;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      background: linear-gradient(135deg, #f0abfc, #38bdf8);
+      box-shadow: 0 0 24px rgba(45,212,191,.14);
+    }
+
+    .section { padding: 78px 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 28px; align-items: end; margin-bottom: 30px; }
+    .section h2 { margin: 0; font-size: clamp(34px, 5vw, 58px); line-height: .98; letter-spacing: -.055em; max-width: 760px; }
+    .section-desc { color: var(--muted); font-size: 18px; line-height: 1.65; max-width: 470px; }
+
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card {
+      padding: 26px;
+      min-height: 230px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(15,23,42,.78), rgba(8,17,31,.72));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .icon {
+      width: 42px; height: 42px; border-radius: 14px;
+      display: grid; place-items: center;
+      margin-bottom: 22px;
+      background: rgba(45,212,191,.12);
+      border: 1px solid rgba(45,212,191,.25);
+      color: var(--teal);
+      font-weight: 900;
+    }
+    .card h3 { margin: 0 0 10px; font-size: 22px; letter-spacing: -.03em; }
+    .card p { margin: 0; color: var(--muted); line-height: 1.6; }
+
+    .flow {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .panel {
+      border-radius: 32px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .panel-pad { padding: 28px; }
+    .mini-terminal {
+      font-family: "Cascadia Mono", Consolas, monospace;
+      color: #d1fae5;
+      font-size: 14px;
+      line-height: 1.95;
+    }
+    .mini-terminal .fail { color: #fda4af; }
+    .mini-terminal .ok { color: #a7f3d0; }
+    .doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .doc-card { padding: 20px; border-radius: 20px; background: rgba(2,6,23,.55); border: 1px solid rgba(148,163,184,.14); }
+    .doc-card b { display: block; margin-bottom: 8px; }
+    .doc-card small { color: var(--muted); line-height: 1.5; }
+
+    .comparison-img {
+      width: 100%;
+      border-radius: 32px;
+      border: 1px solid rgba(148,163,184,.16);
+      box-shadow: var(--shadow);
+      background: #06131f;
+    }
+
+    .quickstart {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: center;
+      padding: 34px;
+      border-radius: 34px;
+      background:
+        linear-gradient(135deg, rgba(45,212,191,.12), rgba(163,230,53,.08)),
+        rgba(15,23,42,.68);
+      border: 1px solid rgba(45,212,191,.20);
+      box-shadow: var(--shadow);
+    }
+    pre {
+      margin: 0;
+      overflow: auto;
+      padding: 22px;
+      border-radius: 22px;
+      background: rgba(2,6,23,.78);
+      border: 1px solid rgba(148,163,184,.14);
+      color: #d1fae5;
+      font-family: "Cascadia Mono", Consolas, monospace;
+      line-height: 1.8;
+    }
+
+    .cta { padding: 86px 0 110px; text-align: center; }
+    .cta-box {
+      padding: 64px 24px;
+      border-radius: 40px;
+      border: 1px solid rgba(163,230,53,.20);
+      background: radial-gradient(circle at 50% 0, rgba(163,230,53,.13), transparent 35rem), rgba(7,17,31,.72);
+      box-shadow: var(--shadow);
+    }
+    .cta h2 { margin: 0 auto 18px; max-width: 820px; font-size: clamp(40px, 6vw, 72px); line-height: .95; letter-spacing: -.06em; }
+    .cta p { margin: 0 auto 28px; color: var(--muted); max-width: 620px; font-size: 18px; line-height: 1.65; }
+
+    footer { border-top: 1px solid rgba(148,163,184,.12); padding: 32px 0; color: var(--muted); }
+    .footer-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+    @media (max-width: 1060px) {
+      .nav-command { display: none; }
+    }
+    @media (max-width: 900px) {
+      .nav-links, .nav-actions { display: none; }
+      .menu-toggle { display: inline-grid; place-items: center; }
+      .mobile-menu.open { display: block; }
+      .hero { padding-top: 62px; }
+      .hero-grid, .flow, .quickstart { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .section-desc { margin-top: 14px; }
+      .float-card { position: static; width: auto; margin-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="site-nav">
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <div class="container nav-inner">
+      <a class="brand" href="#top" aria-label="RunbookAI home">
+        <span class="mark">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 6.5h7l2 2h5v9.5H5V6.5Z" stroke="#A7F3D0" stroke-width="1.8"/><path d="M8.2 13.2l2 1.8-2 1.8M12.5 16.8h3.4" stroke="#A7F3D0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        RunbookAI
+      </a>
+      <div class="nav-links" data-scrollspy>
+        <a href="#use-cases">Use cases</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#comparison">Comparison</a>
+        <a href="#quickstart">Quickstart</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-command"><span>cargo install --path .</span><button class="copy-mini" type="button" data-copy="cargo install --path .">Copy</button></div>
+        <a class="btn" href="docs.html">Docs</a>
+        <a class="btn btn-primary" href="https://github.com/arsyadal/runbook-ai" target="_blank" rel="noreferrer">Star on GitHub ↗</a>
+      </div>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#use-cases">Use cases</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#comparison">Comparison</a>
+      <a href="#quickstart">Quickstart</a>
+      <a href="docs.html">Docs</a>
+      <a href="https://github.com/arsyadal/runbook-ai" target="_blank" rel="noreferrer">Star on GitHub ↗</a>
+    </div>
+  </nav>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span> Context insurance for AI coding agents</div>
+          <h1><span class="gradient-text">Never lose your AI coding context again.</span></h1>
+          <p class="hero-copy">RunbookAI captures commands, errors, changed files, decisions, and root causes, then turns every AI coding session into reusable runbooks, changelogs, PR notes, postmortems, and next-agent briefs.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#quickstart">Get started</a>
+            <a class="btn" href="assets/runbook-demo.mp4">Watch demo</a>
+          </div>
+          <div class="terminal-line">$ runbookai start "Fix payment 500"</div>
+        </div>
+        <div class="hero-visual">
+          <img src="assets/runbook-demo.gif" alt="Animated RunbookAI demo showing a session turning into reusable documents" />
+          <div class="float-card"><strong>One session. Many artifacts.</strong><span>Generate a runbook, changelog, PR summary, postmortem, and next-agent brief from the same captured work.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container logo-strip">
+      <div class="strip-caption">
+        <strong>Works alongside the AI coding tools you already use</strong>
+        <span class="trademark-note">Logos are trademarks of their respective owners. No affiliation or endorsement implied.</span>
+      </div>
+      <div class="strip-box" aria-label="AI coding tools RunbookAI can work alongside">
+        <span class="tool-logo"><img class="brand-logo" src="assets/logos/claude-code.svg" alt="Claude Code logo">Claude Code</span>
+        <span class="tool-logo"><img class="brand-logo" src="assets/logos/cursor.svg" alt="Cursor logo">Cursor</span>
+        <span class="tool-logo"><img class="brand-logo wordmark" src="assets/logos/openai.svg" alt="OpenAI logo">Codex</span>
+        <span class="tool-logo"><img class="brand-logo" src="assets/logos/gemini.svg" alt="Google Gemini logo">Gemini CLI</span>
+        <span class="tool-logo"><img class="brand-logo" src="assets/logos/opencode.ico" alt="OpenCode logo">OpenCode</span>
+        <span class="tool-logo"><span class="tool-mark">π</span>pi</span>
+        <span class="tool-logo"><img class="brand-logo" src="assets/logos/github-copilot.svg" alt="GitHub Copilot logo">Copilot</span>
+      </div>
+    </div>
+
+    <section id="use-cases" class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Built for the messy middle of AI-assisted engineering.</h2>
+          <p class="section-desc">The final diff does not explain the investigation. RunbookAI preserves the trail that normally disappears into chat history and terminal scrollback.</p>
+        </div>
+        <div class="cards">
+          <article class="card"><div class="icon">01</div><h3>Agent handoff</h3><p>When a model hits a context limit, generate a Next-Agent Brief so the next AI tool can continue without a long re-explanation.</p></article>
+          <article class="card"><div class="icon">02</div><h3>Incident debugging</h3><p>Capture commands, errors, failed attempts, root cause, and verification steps while fixing production issues.</p></article>
+          <article class="card"><div class="icon">03</div><h3>PR descriptions</h3><p>Turn the session into a reviewer-friendly summary of what changed, why it changed, how it was tested, and what risks remain.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow" class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Record the work. Generate the memory.</h2>
+          <p class="section-desc">RunbookAI sits alongside your existing tools. Keep using your terminal and AI agent; RunbookAI turns the session into durable engineering artifacts.</p>
+        </div>
+        <div class="flow">
+          <div class="panel panel-pad">
+            <div class="mini-terminal">
+              <div>$ runbookai start "Fix login 401"</div>
+              <div>$ runbookai exec "npm test"</div>
+              <div class="fail">✕ Auth test failed: missing JWT secret</div>
+              <div>$ runbookai note --type root-cause "test env missing JWT_SECRET"</div>
+              <div>$ runbookai exec "npm run build"</div>
+              <div class="ok">✓ build passed</div>
+              <div>$ runbookai generate all</div>
+            </div>
+          </div>
+          <div class="panel panel-pad">
+            <div class="doc-grid">
+              <div class="doc-card"><b>Runbook</b><small>What happened, what failed, and how the fix was verified.</small></div>
+              <div class="doc-card"><b>Changelog</b><small>Human-readable summary of meaningful changes.</small></div>
+              <div class="doc-card"><b>PR Notes</b><small>Summary, changes, verification, risks, and reviewer context.</small></div>
+              <div class="doc-card"><b>Next-Agent Brief</b><small>Portable context for Claude, Cursor, Codex, Gemini, or any future agent.</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="comparison" class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Without RunbookAI, context is fragile.</h2>
+          <p class="section-desc">With RunbookAI, the repo becomes the source of truth for what happened during an AI-assisted coding session.</p>
+        </div>
+        <img class="comparison-img" src="assets/runbook-comparison.svg" alt="Comparison between working without RunbookAI and with RunbookAI" />
+      </div>
+    </section>
+
+    <section id="quickstart" class="section">
+      <div class="container quickstart">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span> Quickstart</div>
+          <h2 style="margin:18px 0 14px;font-size:clamp(34px,5vw,58px);line-height:.98;letter-spacing:-.055em;">Start preserving your next debugging session.</h2>
+          <p class="section-desc">Install from source, start a session, run commands, add notes, and generate reusable documentation.</p>
+        </div>
+        <pre><code>cargo install --path .
+runbookai init
+runbookai start "Fix payment 500"
+runbookai exec "npm test"
+runbookai note --type root-cause "JWT secret missing"
+runbookai generate all</code></pre>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container cta-box">
+        <h2>Do not let your AI session disappear when the chat ends.</h2>
+        <p>Capture the fix, preserve the reasoning, and continue anywhere with durable engineering memory.</p>
+        <div class="hero-actions" style="justify-content:center">
+          <a class="btn btn-primary" href="https://github.com/arsyadal/runbook-ai">Star on GitHub</a>
+          <a class="btn" href="docs.html">Read the docs</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© 2026 RunbookAI</span>
+      <span>Context insurance for AI coding agents.</span>
+    </div>
+  </footer>
+  <script>
+    const nav = document.getElementById('site-nav');
+    const progress = document.getElementById('scroll-progress');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const spyLinks = Array.from(document.querySelectorAll('[data-scrollspy] a'));
+    const spySections = spyLinks.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+
+    function updateChrome() {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const pct = max > 0 ? (scrollY / max) * 100 : 0;
+      progress.style.width = `${pct}%`;
+      nav.classList.toggle('scrolled', scrollY > 8);
+    }
+
+    function setActive(id) {
+      spyLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setActive(visible.target.id);
+    }, { rootMargin: '-20% 0px -60% 0px', threshold: [0.1, 0.25, 0.45] });
+
+    spySections.forEach((section) => observer.observe(section));
+    addEventListener('scroll', updateChrome, { passive: true });
+    updateChrome();
+
+    menuToggle.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.textContent = open ? '×' : '☰';
+    });
+
+    mobileMenu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.textContent = '☰';
+    }));
+
+    document.querySelectorAll('[data-copy]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        await navigator.clipboard?.writeText(button.dataset.copy);
+        const old = button.textContent;
+        button.textContent = 'Copied';
+        setTimeout(() => button.textContent = old, 1200);
+      });
+    });
+  </script>
+</body>
+</html>

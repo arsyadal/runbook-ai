@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RunbookAI Docs — Quickstart and Commands</title>
+  <meta name="description" content="Documentation for RunbookAI: install, quickstart, commands, shell integration, AI summaries, and MCP server setup." />
+  <style>
+    :root{--bg:#020617;--surface:rgba(15,23,42,.76);--surface2:rgba(8,17,31,.9);--line:rgba(148,163,184,.18);--text:#f8fafc;--muted:#94a3b8;--soft:#cbd5e1;--teal:#2dd4bf;--lime:#a3e635;--sky:#38bdf8;--amber:#fbbf24;--rose:#fb7185;--radius:26px;--shadow:0 30px 90px rgba(0,0,0,.38)}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;color:var(--text);background:radial-gradient(circle at 50% -10%,rgba(45,212,191,.22),transparent 34rem),radial-gradient(circle at 90% 0,rgba(163,230,53,.1),transparent 28rem),var(--bg);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-.01em} body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(to bottom,#000,transparent 80%)}
+    a{color:inherit;text-decoration:none}.container{width:min(1120px,calc(100% - 40px));margin:0 auto}.nav{position:sticky;top:0;z-index:10;border-bottom:1px solid rgba(148,163,184,.12);backdrop-filter:blur(22px);background:linear-gradient(180deg,rgba(2,6,23,.84),rgba(2,6,23,.58));transition:box-shadow .2s ease,border-color .2s ease}.nav:before{content:"";position:absolute;inset:0 0 auto 0;height:1px;background:linear-gradient(90deg,transparent,rgba(45,212,191,.5),rgba(163,230,53,.35),transparent)}.nav.scrolled{box-shadow:0 18px 55px rgba(0,0,0,.28);border-bottom-color:rgba(45,212,191,.16)}.scroll-progress{position:absolute;left:0;bottom:-1px;height:2px;width:0%;background:linear-gradient(90deg,var(--teal),var(--lime));box-shadow:0 0 24px rgba(45,212,191,.35)}.nav-inner{height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px;font-weight:850}.mark{width:36px;height:36px;border-radius:14px;background:radial-gradient(circle at 32% 22%,rgba(255,255,255,.22),transparent 26px),linear-gradient(135deg,rgba(45,212,191,.28),rgba(163,230,53,.17));border:1px solid rgba(45,212,191,.48);display:grid;place-items:center;box-shadow:0 0 34px rgba(45,212,191,.18),inset 0 1px 0 rgba(255,255,255,.1)}.mark svg{width:22px;height:22px}.nav-links{display:flex;gap:6px;color:var(--muted);font-size:14px}.nav-links a{position:relative;padding:9px 11px;border-radius:999px;transition:color .18s ease,background .18s ease}.nav-links a:after{content:"";position:absolute;left:12px;right:12px;bottom:4px;height:2px;border-radius:99px;background:linear-gradient(90deg,var(--teal),var(--lime));opacity:0;transform:scaleX(.4);transition:opacity .18s ease,transform .18s ease}.nav-links a:hover,.nav-links a.active{color:var(--text);background:rgba(45,212,191,.07)}.nav-links a:hover:after,.nav-links a.active:after{opacity:1;transform:scaleX(1)}.nav-actions{display:flex;gap:10px;align-items:center}.nav-command{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 12px;border-radius:999px;border:1px solid rgba(148,163,184,.16);background:rgba(2,6,23,.52);color:#d1fae5;font-family:"Cascadia Mono",Consolas,monospace;font-size:12px;white-space:nowrap}.copy-mini{border:0;color:#04111a;background:linear-gradient(135deg,var(--teal),var(--lime));border-radius:999px;padding:4px 8px;font-weight:850;cursor:pointer}.btn{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 16px;border-radius:999px;border:1px solid rgba(148,163,184,.22);background:rgba(15,23,42,.72);font-weight:750;font-size:14px}.btn-primary{border:0;color:#04111a;background:linear-gradient(135deg,var(--teal),var(--lime))}.menu-toggle{display:none;width:42px;height:42px;border-radius:14px;border:1px solid rgba(148,163,184,.22);background:rgba(15,23,42,.72);color:var(--text);font-size:20px}.mobile-menu{display:none;border-top:1px solid rgba(148,163,184,.12);padding:12px 20px 18px;background:rgba(2,6,23,.9)}.mobile-menu a{display:block;padding:12px 6px;color:var(--soft)}
+    .hero{padding:86px 0 44px}.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid rgba(45,212,191,.22);border-radius:999px;background:rgba(45,212,191,.08);color:#a7f3d0;font-size:13px;font-weight:780}.pulse{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 6px rgba(163,230,53,.12)}h1{margin:22px 0 16px;font-size:clamp(48px,7vw,86px);line-height:.94;letter-spacing:-.07em;max-width:900px}.gradient{background:linear-gradient(135deg,#fff,#b7f7e9 45%,#d9ffa1);-webkit-background-clip:text;color:transparent}.lead{color:var(--soft);font-size:20px;line-height:1.65;max-width:760px}.layout{display:grid;grid-template-columns:270px 1fr;gap:28px;align-items:start;padding:38px 0 96px}.sidebar{position:sticky;top:96px;border:1px solid var(--line);border-radius:24px;background:rgba(15,23,42,.48);padding:16px}.sidebar a{display:block;color:var(--muted);padding:10px 12px;border-radius:14px;font-size:14px;border:1px solid transparent;transition:background .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease}.sidebar a:hover{background:rgba(45,212,191,.08);color:var(--text)}.sidebar a.active{color:#ecfdf5;background:linear-gradient(135deg,rgba(45,212,191,.16),rgba(163,230,53,.08));border-color:rgba(45,212,191,.28);box-shadow:0 0 28px rgba(45,212,191,.08)}.content{display:grid;gap:18px}.section{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:inset 0 1px 0 rgba(255,255,255,.04);padding:30px}.section h2{margin:0 0 12px;font-size:32px;letter-spacing:-.045em}.section h3{margin:26px 0 10px;font-size:20px}.section p,.section li{color:var(--muted);line-height:1.7}.section ul{padding-left:20px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.card{padding:18px;border-radius:18px;background:rgba(2,6,23,.48);border:1px solid rgba(148,163,184,.14)}.card b{display:block;margin-bottom:7px}.card span{color:var(--muted);line-height:1.55;font-size:14px}pre{margin:14px 0 0;overflow:auto;padding:20px;border-radius:18px;background:rgba(2,6,23,.82);border:1px solid rgba(148,163,184,.14);color:#d1fae5;font-family:"Cascadia Mono",Consolas,monospace;line-height:1.8}.note{border-left:3px solid var(--teal);padding:12px 14px;background:rgba(45,212,191,.08);border-radius:14px;color:var(--soft)}.warn{border-left-color:var(--amber);background:rgba(251,191,36,.08)}footer{border-top:1px solid rgba(148,163,184,.12);padding:32px 0;color:var(--muted)}.footer-inner{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}@media(max-width:1060px){.nav-command{display:none}}@media(max-width:900px){.nav-links,.nav-actions,.sidebar{display:none}.menu-toggle{display:inline-grid;place-items:center}.mobile-menu.open{display:block}.layout{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.hero{padding-top:56px}}
+  </style>
+</head>
+<body>
+  <nav class="nav" id="site-nav"><div class="scroll-progress" id="scroll-progress"></div><div class="container nav-inner"><a class="brand" href="index.html"><span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M5 6.5h7l2 2h5v9.5H5V6.5Z" stroke="#A7F3D0" stroke-width="1.8"/><path d="M8.2 13.2l2 1.8-2 1.8M12.5 16.8h3.4" stroke="#A7F3D0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>RunbookAI</a><div class="nav-links" data-scrollspy><a href="index.html">Home</a><a href="#quickstart">Quickstart</a><a href="#commands">Commands</a><a href="#mcp">MCP</a><a href="#templates">Templates</a></div><div class="nav-actions"><div class="nav-command"><span>cargo install --path .</span><button class="copy-mini" type="button" data-copy="cargo install --path .">Copy</button></div><a class="btn btn-primary" href="https://github.com/arsyadal/runbook-ai" target="_blank" rel="noreferrer">Star on GitHub ↗</a></div><button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">☰</button></div><div class="mobile-menu" id="mobile-menu"><a href="index.html">Home</a><a href="#quickstart">Quickstart</a><a href="#commands">Commands</a><a href="#mcp">MCP</a><a href="#templates">Templates</a><a href="https://github.com/arsyadal/runbook-ai" target="_blank" rel="noreferrer">Star on GitHub ↗</a></div></nav>
+  <header class="hero"><div class="container"><div class="eyebrow"><span class="pulse"></span> Documentation</div><h1><span class="gradient">RunbookAI docs for fast setup and daily use.</span></h1><p class="lead">Install RunbookAI, capture your AI-assisted debugging session, and generate durable engineering artifacts that survive chat resets, provider switches, and handoffs.</p></div></header>
+  <main class="container layout">
+    <aside class="sidebar"><a href="#quickstart">Quickstart</a><a href="#workflow">Recommended workflow</a><a href="#commands">Command reference</a><a href="#shell">Shell integration</a><a href="#ai">AI summaries</a><a href="#mcp">MCP server</a><a href="#templates">Custom templates</a><a href="#storage">Storage and outputs</a></aside>
+    <div class="content">
+      <section id="quickstart" class="section"><h2>Quickstart</h2><p>Install from source, initialize local storage, start a session, record commands, add notes, and generate documentation.</p><pre><code>cargo install --path .
+runbookai init
+runbookai start "Fix payment 500"
+runbookai exec "npm test"
+runbookai note --type root-cause "JWT secret missing in test env"
+runbookai exec "npm run build"
+runbookai stop
+runbookai generate all</code></pre><p class="note">Generated Markdown files are written to <code>docs/runbooks/</code>. Session data is stored locally in <code>.runbookai/</code>.</p></section>
+      <section id="workflow" class="section"><h2>Recommended workflow</h2><div class="grid"><div class="card"><b>1. Start before debugging</b><span>Create a named session before asking an AI agent to investigate or modify code.</span></div><div class="card"><b>2. Record commands</b><span>Use <code>runbookai exec</code> for full output capture, or shell hooks for automatic command logging.</span></div><div class="card"><b>3. Add human notes</b><span>Record findings, decisions, risks, root causes, and failed attempts while the context is still fresh.</span></div><div class="card"><b>4. Generate artifacts</b><span>Create runbooks, changelogs, postmortems, PR notes, and next-agent briefs from the same session.</span></div></div></section>
+      <section id="commands" class="section"><h2>Command reference</h2><h3>Session lifecycle</h3><pre><code>runbookai init
+runbookai start "Fix login 401 error"
+runbookai status
+runbookai stop</code></pre><h3>Capture commands and notes</h3><pre><code>runbookai exec "npm test"
+runbookai exec "npm run build"
+runbookai note --type finding "Login test fails with 401."
+runbookai note --type root-cause "JWT secret is missing."
+runbookai note --type decision "Validate env during bootstrap."
+runbookai note --type risk "Production env names must not change."</code></pre><h3>Generate documentation</h3><pre><code>runbookai generate runbook
+runbookai generate changelog
+runbookai generate postmortem
+runbookai generate pr
+runbookai generate all</code></pre><h3>Export and search</h3><pre><code>runbookai export --format json
+runbookai export --format markdown
+runbookai search "JWT secret"</code></pre></section>
+      <section id="shell" class="section"><h2>Shell integration</h2><p>If you do not want to type <code>runbookai exec</code> for every command, enable shell hooks. Commands will be recorded automatically whenever a session is active.</p><pre><code># Zsh
+source &lt;(runbookai shell-hook zsh)
+
+# Bash
+source &lt;(runbookai shell-hook bash)</code></pre><pre><code># PowerShell
+runbookai shell-hook powershell | Invoke-Expression</code></pre><p class="note warn">For full command output and error capture, <code>runbookai exec</code> is still recommended.</p></section>
+      <section id="ai" class="section"><h2>AI-assisted summaries</h2><p>RunbookAI can generate AI-assisted summaries with OpenAI, Gemini, or local Ollama.</p><pre><code>runbookai generate runbook --ai
+runbookai generate pr --ai
+runbookai generate all --ai</code></pre><ul><li><code>OPENAI_API_KEY</code> → OpenAI, default model <code>gpt-4o</code></li><li><code>GEMINI_API_KEY</code> → Gemini, default model <code>gemini-1.5-pro</code></li><li>No API key → local Ollama, default model <code>llama3</code></li></ul><pre><code>RUNBOOKAI_MODEL=llama3.1 runbookai generate runbook --ai</code></pre></section>
+      <section id="mcp" class="section"><h2>MCP server</h2><p>RunbookAI supports the Model Context Protocol so AI agents can query previous sessions directly.</p><pre><code>runbookai mcp serve</code></pre><p>Claude Desktop example:</p><pre><code>{
+  "mcpServers": {
+    "runbookai": {
+      "command": "runbookai",
+      "args": ["mcp", "serve"]
+    }
+  }
+}</code></pre><div class="grid"><div class="card"><b>Tool</b><span><code>search_sessions</code> searches through old sessions.</span></div><div class="card"><b>Resource</b><span><code>runbook://sessions/&lt;id&gt;</code> reads full session data as JSON.</span></div></div></section>
+      <section id="templates" class="section"><h2>Custom templates</h2><p>RunbookAI supports custom Handlebars templates stored in:</p><pre><code>.runbookai/templates/</code></pre><p>Use templates when your team wants a specific runbook, PR, postmortem, or changelog format.</p></section>
+      <section id="storage" class="section"><h2>Storage and outputs</h2><div class="grid"><div class="card"><b>Local session data</b><span><code>.runbookai/</code> stores captured session records locally in the repository.</span></div><div class="card"><b>Generated docs</b><span><code>docs/runbooks/</code> contains generated Markdown artifacts.</span></div><div class="card"><b>Redaction</b><span>Basic secret redaction is applied to captured diffs and outputs.</span></div><div class="card"><b>Git awareness</b><span>Changed files and Git diff context are captured to make handoffs more complete.</span></div></div></section>
+    </div>
+  </main>
+  <footer><div class="container footer-inner"><span>© 2026 RunbookAI</span><span><a href="index.html">Landing page</a> · <a href="https://github.com/arsyadal/runbook-ai">GitHub</a></span></div></footer>
+  <script>
+    const nav = document.getElementById('site-nav');
+    const progress = document.getElementById('scroll-progress');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const sidebarLinks = Array.from(document.querySelectorAll('.sidebar a[href^="#"]'));
+    const topLinks = Array.from(document.querySelectorAll('[data-scrollspy] a[href^="#"]'));
+    const sections = sidebarLinks.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+
+    function updateChrome() {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const pct = max > 0 ? (scrollY / max) * 100 : 0;
+      progress.style.width = `${pct}%`;
+      nav.classList.toggle('scrolled', scrollY > 8);
+    }
+
+    function setActive(id) {
+      sidebarLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+      topLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setActive(visible.target.id);
+    }, { rootMargin: '-18% 0px -62% 0px', threshold: [0.08, 0.18, 0.32, 0.5] });
+
+    sections.forEach((section) => observer.observe(section));
+    addEventListener('scroll', updateChrome, { passive: true });
+    updateChrome();
+
+    if (location.hash && document.querySelector(location.hash)) setActive(location.hash.slice(1));
+    else if (sections[0]) setActive(sections[0].id);
+
+    menuToggle.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.textContent = open ? '×' : '☰';
+    });
+
+    mobileMenu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.textContent = '☰';
+    }));
+
+    document.querySelectorAll('[data-copy]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        await navigator.clipboard?.writeText(button.dataset.copy);
+        const old = button.textContent;
+        button.textContent = 'Copied';
+        setTimeout(() => button.textContent = old, 1200);
+      });
+    });
+  </script>
+</body>
+</html>

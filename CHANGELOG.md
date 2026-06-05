@@ -5,6 +5,9 @@ All notable changes in RunbookAI, from the first commit to the latest update.
 ## Unreleased
 
 ### Documentation
+- Added a polished static landing page and documentation page under `docs/`.
+- Added enhanced navigation polish: active states, mobile menu, scroll progress, external-link CTA, copyable install command, and stronger brand mark.
+- Added third-party tool logos to the landing page with a trademark disclaimer.
 - Added a short animated product demo GIF, MP4 video, and poster image to the README.
 - Added real-world use cases to the README to make RunbookAI's practical value clearer.
 - Covered production incidents, AI-agent handoff, provider switching, PR descriptions, team knowledge, and risky-change audits.
