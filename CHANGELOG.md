@@ -2,6 +2,12 @@
 
 All notable changes in RunbookAI, from the first commit to the latest update.
 
+## Unreleased
+
+### Documentation
+- Added real-world use cases to the README to make RunbookAI's practical value clearer.
+- Covered production incidents, AI-agent handoff, provider switching, PR descriptions, team knowledge, and risky-change audits.
+
 ## 2026-06-05
 
 ### `9d9d9bf` — docs: add visual comparison assets

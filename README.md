@@ -44,6 +44,63 @@ Media assets: [PNG](docs/assets/runbook-comparison.png) · [JPG](docs/assets/run
 | Team documentation | Postmortems, changelogs, and PR summaries are written manually after the fact. | Runbooks, changelogs, postmortems, and PR notes can be generated from the recorded session. |
 | Token usage | Repeating context consumes more tokens across tools and sessions. | Reusable docs reduce repeated explanations and preserve context outside the chat window. |
 
+## Real-World Use Cases
+
+### 1. Debugging a production incident
+
+A payment endpoint starts returning `500` errors. During the fix, you run database checks, inspect logs, test patches, and discover the root cause.
+
+With RunbookAI, the entire investigation becomes a postmortem-ready record:
+
+- commands executed,
+- failed attempts,
+- detected errors,
+- files changed,
+- root cause,
+- verification steps,
+- follow-up risks.
+
+Instead of writing an incident report from memory, you generate one from the actual debugging session.
+
+### 2. Handoff when an AI agent hits its limit
+
+You are halfway through fixing a bug when your AI coding agent reaches a message cap or context limit.
+
+Without RunbookAI, the next agent needs a long explanation of what happened.
+
+With RunbookAI, you generate a Next-Agent Brief containing what was tried, what failed, what changed, and what still needs to be done. The next AI agent can continue from the current state instead of starting over.
+
+### 3. Switching between Claude, Cursor, Codex, Gemini CLI, or Copilot
+
+Different AI tools are good at different tasks. You might debug with Claude, refactor in Cursor, and verify with Codex.
+
+RunbookAI acts as a shared context layer across tools. The repo contains the engineering memory, so the workflow is not locked inside one provider's chat history.
+
+### 4. Preparing a pull request description
+
+After a long coding session, it is easy to forget why each file changed.
+
+RunbookAI can turn the session into a PR summary with:
+
+- what changed,
+- why it changed,
+- how it was tested,
+- risks reviewers should know about.
+
+This makes PRs easier to review and reduces back-and-forth with teammates.
+
+### 5. Building reusable team knowledge
+
+Some bugs come back months later. If the original fix only lives in a chat session, the team has to rediscover the same context.
+
+RunbookAI stores the fix process as repo-friendly Markdown. Future developers and future AI agents can search old sessions, understand past decisions, and avoid repeating the same investigation.
+
+### 6. Auditing risky changes
+
+For infrastructure, auth, payments, migrations, or production fixes, the process matters as much as the final diff.
+
+RunbookAI records the operational trail: commands, environment checks, errors, decisions, risks, and verification. That makes risky work easier to review, explain, and recover from.
+
 ## Status
 
 Early Rust MVP — modular, tested, and lint-clean.
