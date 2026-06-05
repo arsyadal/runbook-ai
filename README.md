@@ -27,6 +27,19 @@ AI coding tools like Claude Code, Cursor, Codex, Gemini CLI, OpenCode, pi, and C
 
 RunbookAI converts that process into repo-friendly Markdown documentation.
 
+## Comparison: With RunbookAI vs Without RunbookAI
+
+| Area | Without RunbookAI | With RunbookAI |
+| --- | --- | --- |
+| Session continuity | Context is trapped in one chat and can be lost after reset, limit, or provider switch. | Work is captured as durable Markdown and can be handed to any future agent or teammate. |
+| Command history | Commands must be remembered manually or searched from shell history. | Commands, exit codes, duration, and optional output are recorded during the session. |
+| Error tracking | Errors are often buried in terminal/chat logs. | Detected errors are summarized and attached to the session documentation. |
+| Changed files | File changes must be reconstructed from memory or Git diff. | Changed files and Git diff context are captured automatically with redaction. |
+| Decisions and root cause | Technical reasoning may disappear when the chat ends. | Notes, decisions, findings, risks, and root cause are saved as reusable knowledge. |
+| Handoff to another AI agent | You need to re-explain the problem, attempts, failures, and current state. | Generate a next-agent brief so another tool can continue from the exact state. |
+| Team documentation | Postmortems, changelogs, and PR summaries are written manually after the fact. | Runbooks, changelogs, postmortems, and PR notes can be generated from the recorded session. |
+| Token usage | Repeating context consumes more tokens across tools and sessions. | Reusable docs reduce repeated explanations and preserve context outside the chat window. |
+
 ## Status
 
 Early Rust MVP — modular, tested, and lint-clean.
